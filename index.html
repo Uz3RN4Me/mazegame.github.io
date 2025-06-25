@@ -1,0 +1,2990 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kryst-Core Labyrinth</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            overscroll-behavior: none; 
+            font-family: 'Rajdhani', sans-serif; 
+            background-color: #0A051E; 
+            color: #a5b4fc; 
+        }
+        ::-webkit-scrollbar { width: 10px; height: 10px; }
+        ::-webkit-scrollbar-track { background: #160E2E; }
+        ::-webkit-scrollbar-thumb { background: #4f46e5; border-radius: 5px; border: 2px solid #160E2E; }
+        ::-webkit-scrollbar-thumb:hover { background: #6366f1; }
+        .font-display { font-family: 'Orbitron', sans-serif; }
+        .font-body { font-family: 'Rajdhani', sans-serif; }
+        input, select, textarea, button { font-family: 'Rajdhani', sans-serif; }
+        #error-container {
+            position: fixed; top: 10px; left: 10px; right: 10px;
+            background-color: rgba(255, 0, 0, 0.85); color: white;
+            padding: 15px; border: 2px solid darkred; border-radius: 8px;
+            z-index: 9999; font-family: monospace; white-space: pre-wrap;
+            max-height: 250px; overflow-y: auto; box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+        }
+    </style>
+<script type="importmap">
+{
+  "imports": {
+    "react/": "https://esm.sh/react@^19.1.0/",
+    "react": "https://esm.sh/react@^19.1.0",
+    "react-dom/": "https://esm.sh/react-dom@^19.1.0/"
+  }
+}
+</script>
+<script>
+    console.log('[HTML] Initializing basic error handler...');
+    var globalErrorContainer = null;
+    window.onerror = function(message, source, lineno, colno, error) {
+        console.error('[Global Error]', message, source, lineno, colno, error);
+        if (!globalErrorContainer) {
+            globalErrorContainer = document.getElementById('error-container');
+            if (!globalErrorContainer) {
+                 globalErrorContainer = document.createElement('div');
+                 globalErrorContainer.id = 'error-container';
+                 if (document.body) document.body.prepend(globalErrorContainer);
+                 else document.documentElement.appendChild(globalErrorContainer);
+            }
+        }
+        var errorMsg = "ERROR:\nMessage: " + message + "\nSource: " + source + "\nLine: " + lineno + ", Column: " + colno;
+        if (error && error.stack) errorMsg += "\nStack: " + error.stack;
+        const newErrorP = document.createElement('p');
+        newErrorP.textContent = errorMsg;
+        newErrorP.style.borderBottom = "1px solid #a00";
+        newErrorP.style.marginBottom = "8px"; newErrorP.style.paddingBottom = "8px";
+        globalErrorContainer.appendChild(newErrorP);
+        globalErrorContainer.style.display = 'block';
+        return false; 
+    };
+</script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script>
+    console.log('[HTML] Babel Standalone script tag processed.');
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+<body class="antialiased font-body">
+    <div id="error-container" style="display: none;"></div>
+    <div id="root">
+        <p style="padding: 20px; text-align: center; font-size: 1.2em; color: #a5b4fc;">Loading Kryst-Core Labyrinth...</p>
+    </div>
+    <script>
+        console.log('[HTML] Root div processed.');
+    </script>
+    
+    <script type="text/babel" 
+            data-type="module" 
+            data-options='{ 
+                "presets": [
+                    ["env", { "modules": false, "targets": { "esmodules": true } }], 
+                    "react", 
+                    "typescript"
+                ], 
+                "filename": "KrystCoreLabyrinth_InlineBundle.tsx" 
+            }'>
+// --- START OF INLINED SCRIPT BUNDLE ---
+// All .ts and .tsx file contents will be placed here, in dependency order,
+// with local relative imports adjusted to use inlined component names.
+
+import React from 'react'; // These top-level imports are resolved by importmap
+import ReactDOM from 'react-dom/client';
+
+// --- START OF INLINED types.ts ---
+console.log('[types.ts inline] Loading...');
+var Screen;
+(function (Screen) {
+    Screen["MENU"] = "MENU";
+    Screen["GAME"] = "GAME";
+    Screen["SETTINGS"] = "SETTINGS";
+    Screen["WIN"] = "WIN";
+    Screen["LEVEL_SELECT"] = "LEVEL_SELECT";
+    Screen["SKIN_CUSTOMIZATION"] = "SKIN_CUSTOMIZATION";
+    Screen["LEVEL_EDITOR"] = "LEVEL_EDITOR";
+})(Screen || (Screen = {}));
+var GameMode;
+(function (GameMode) {
+    GameMode["NORMAL"] = "Normal";
+    GameMode["DARKNESS"] = "Darkness";
+    GameMode["DASH"] = "Dash";
+    GameMode["LEVELS"] = "Levels";
+})(GameMode || (GameMode = {}));
+var SymbolicGameSize;
+(function (SymbolicGameSize) {
+    SymbolicGameSize["SMALL"] = "Small";
+    SymbolicGameSize["MEDIUM"] = "Medium";
+    SymbolicGameSize["LARGE"] = "Large";
+})(SymbolicGameSize || (SymbolicGameSize = {}));
+var PlayerCoreShape;
+(function (PlayerCoreShape) {
+    PlayerCoreShape["CIRCLE"] = "CIRCLE";
+    PlayerCoreShape["HEXAGON"] = "HEXAGON";
+    PlayerCoreShape["TRIANGLE"] = "TRIANGLE";
+    PlayerCoreShape["SQUARE"] = "SQUARE";
+    PlayerCoreShape["DIAMOND"] = "DIAMOND";
+})(PlayerCoreShape || (PlayerCoreShape = {}));
+var PlayerTrailStyle;
+(function (PlayerTrailStyle) {
+    PlayerTrailStyle["DOTS"] = "DOTS";
+    PlayerTrailStyle["LINE"] = "LINE";
+})(PlayerTrailStyle || (PlayerTrailStyle = {}));
+var SoundEffect;
+(function (SoundEffect) {
+    SoundEffect["PLAYER_MOVE"] = "PLAYER_MOVE";
+    SoundEffect["PLAYER_DASH"] = "PLAYER_DASH";
+    SoundEffect["WALL_BUMP"] = "WALL_BUMP";
+    SoundEffect["KEY_COLLECT"] = "KEY_COLLECT";
+    SoundEffect["GAME_WIN"] = "GAME_WIN";
+    SoundEffect["GAME_LOSE"] = "GAME_LOSE";
+    SoundEffect["LEVEL_START"] = "LEVEL_START";
+    SoundEffect["BUTTON_CLICK"] = "BUTTON_CLICK";
+    SoundEffect["BUTTON_CLICK_SECONDARY"] = "BUTTON_CLICK_SECONDARY";
+    SoundEffect["SKIN_SELECT"] = "SKIN_SELECT";
+    SoundEffect["SKIN_EQUIP"] = "SKIN_EQUIP";
+    SoundEffect["SCREEN_TRANSITION"] = "SCREEN_TRANSITION";
+    SoundEffect["TIME_TICK_LOW"] = "TIME_TICK_LOW";
+    SoundEffect["TIME_UP"] = "TIME_UP";
+    SoundEffect["HUNTER_MOVE_CONTINUOUS"] = "HUNTER_MOVE_CONTINUOUS";
+})(SoundEffect || (SoundEffect = {}));
+var EditorTool;
+(function (EditorTool) {
+    EditorTool["WALL"] = "WALL";
+    EditorTool["PATH"] = "PATH";
+    EditorTool["START"] = "START";
+    EditorTool["END"] = "END";
+    EditorTool["KEY"] = "KEY";
+    EditorTool["HUNTER"] = "HUNTER";
+    EditorTool["ERASER"] = "ERASER";
+})(EditorTool || (EditorTool = {}));
+// --- END OF INLINED types.ts ---
+
+// --- START OF INLINED constants.ts ---
+console.log('[constants.ts inline] Loading...');
+const DEFAULT_MAZE_SIZE = 15;
+const CELL_SIZE_PX = 20;
+const PLAYER_TRAIL_LENGTH = 8;
+const TRAIL_OPACITY_INIT = 1.0;
+const TRAIL_FADE_RATE = 0.15;
+const TRAIL_UPDATE_INTERVAL = 45;
+const TIME_TRIAL_LOW_THRESHOLD = 10;
+const HUNTER_CONTINUOUS_SPEED_PX_PER_SEC = 85;
+const HUNTER_RADIUS_FACTOR = 0.35;
+const PLAYER_RADIUS_FACTOR = 0.35;
+const GAME_LOGIC_FPS = 30;
+const THEME_COLORS = {
+    background: 'bg-[#0A051E]', textPrimary: 'text-cyan-300', textSecondary: 'text-indigo-300',
+    textAccent: 'text-fuchsia-400', textDanger: 'text-red-400', panelBg: 'bg-[#160E2E]',
+    panelBorder: 'border-indigo-700', panelBorderAccent: 'border-fuchsia-500',
+    buttonPrimaryBg: 'bg-fuchsia-600', buttonPrimaryHoverBg: 'hover:bg-fuchsia-500',
+    buttonSecondaryBg: 'bg-cyan-600', buttonSecondaryHoverBg: 'hover:bg-cyan-500',
+    buttonGhostBorder: 'border-indigo-500', buttonGhostHoverBorder: 'hover:border-fuchsia-400',
+    buttonGhostText: 'text-indigo-300', buttonGhostHoverText: 'hover:text-fuchsia-300',
+    inputBg: 'bg-indigo-900', inputBorder: 'border-indigo-600', inputText: 'text-cyan-200',
+    inputFocusRing: 'focus:ring-fuchsia-500', inputColorPickerIndicator: 'border-transparent',
+    canvasWall: '#160E2E', canvasPath: '#312e81', canvasPlayerDefault: '#d946ef',
+    canvasStart: '#06b6d4', canvasEnd: '#fbbf24', canvasKey: '#FFD700',
+    canvasHunter: '#ef4444', canvasDarknessGradientStart: 'rgba(10, 5, 30, 0)',
+    canvasDarknessGradientEnd: '#0A051E',
+};
+const DEFAULT_AURA_PALETTE_ID = 'default_cyan_pulse';
+const DEFAULT_CORE_MATRIX_ID = PlayerCoreShape.CIRCLE;
+const DEFAULT_TRAIL_SIGNATURE_ID = PlayerTrailStyle.DOTS;
+const AURA_PALETTES = [
+    { id: DEFAULT_AURA_PALETTE_ID, name: 'Kryst Initial', playerColor: '#06b6d4', trailColorBase: '6, 182, 212', previewSwatchStyle: { background: 'linear-gradient(45deg, #06b6d4, #0e7490)' }, unlockDescription: 'Available by default.' },
+    { id: 'arcane_fuchsia', name: 'Arcane Fuchsia', playerColor: '#d946ef', trailColorBase: '217, 70, 239', previewSwatchStyle: { background: 'linear-gradient(45deg, #d946ef, #a21caf)' }, unlockDescription: 'Complete Level 2' },
+    { id: 'crimson_core', name: 'Crimson Core', playerColor: '#f43f5e', trailColorBase: '244, 63, 94', previewSwatchStyle: { background: 'linear-gradient(45deg, #f43f5e, #be123c)' }, unlockDescription: 'Complete Level 4' },
+    { id: 'veridian_stream', name: 'Veridian Stream', playerColor: '#22c55e', trailColorBase: '34, 197, 94', previewSwatchStyle: { background: 'linear-gradient(45deg, #22c55e, #15803d)' }, unlockDescription: 'Complete Level 6' },
+    { id: 'void_violet', name: 'Void Violet', playerColor: '#6d28d9', trailColorBase: '109, 40, 217', previewSwatchStyle: { background: 'linear-gradient(45deg, #6d28d9, #4c1d95)' }, unlockDescription: 'Complete Level 8' },
+];
+const CORE_MATRIX_ITEMS = [
+    { id: PlayerCoreShape.CIRCLE, name: 'Orb Core', unlockDescription: 'Available by default.' },
+    { id: PlayerCoreShape.TRIANGLE, name: 'Vector Tri-Core', unlockDescription: 'Complete Level 1' },
+    { id: PlayerCoreShape.SQUARE, name: 'Block Matrix', unlockDescription: 'Complete Level 3' },
+    { id: PlayerCoreShape.HEXAGON, name: 'Hexa-Cell', unlockDescription: 'Complete Level 5' },
+    { id: PlayerCoreShape.DIAMOND, name: 'Facet Prism', unlockDescription: 'Complete Level 7' },
+];
+const TRAIL_SIGNATURE_ITEMS = [
+    { id: PlayerTrailStyle.DOTS, name: 'Particle Pulse', unlockDescription: 'Available by default.' },
+    { id: PlayerTrailStyle.LINE, name: 'Solid Stream', unlockDescription: 'Complete Level 20' },
+];
+const CUSTOM_SKIN_ID = 'user_assembled_kryst_signature';
+const DEFAULT_CUSTOM_ASSEMBLY = { paletteId: DEFAULT_AURA_PALETTE_ID, coreShapeId: DEFAULT_CORE_MATRIX_ID, trailStyleId: DEFAULT_TRAIL_SIGNATURE_ID };
+const GAME_SIZE_CONFIG = [
+    { name: SymbolicGameSize.SMALL, value: 11, label: 'Small (11x11)' },
+    { name: SymbolicGameSize.MEDIUM, value: 15, label: 'Medium (15x15)' },
+    { name: SymbolicGameSize.LARGE, value: 21, label: 'Large (21x21)' },
+];
+const MODE_DESCRIPTIONS = {
+    [GameMode.NORMAL]: "Normal Mode: The classic labyrinth experience. Navigate the corridors and find the exit.",
+    [GameMode.DARKNESS]: "Darkness Mode: Visibility is severely limited. Navigate carefully using your immediate surroundings.",
+    [GameMode.DASH]: "Dash Mode: Move at high speed in a straight line until you hit an obstacle. Plan your dashes carefully!",
+    [GameMode.LEVELS]: "Levels Mode: Play through predefined challenging mazes. Some levels feature unique mechanics like Sentinels or time limits. New levels unlock as you progress.",
+};
+const isBrowser = typeof window !== 'undefined' && typeof window.btoa === 'function';
+const defaultPaletteForSVG = AURA_PALETTES.find(p => p.id === DEFAULT_AURA_PALETTE_ID) || AURA_PALETTES[0];
+const svgColors = {
+    pathBg: THEME_COLORS.canvasPath, border: '#4338ca', primaryText: '#67e8f9', accent: '#f472b6', panelAccent: '#a855f7',
+    start: THEME_COLORS.canvasStart, end: THEME_COLORS.canvasEnd, playerDefault: defaultPaletteForSVG.playerColor,
+    key: THEME_COLORS.canvasKey, darknessStart: THEME_COLORS.canvasDarknessGradientStart, darknessEnd: THEME_COLORS.canvasDarknessGradientEnd,
+    wall: THEME_COLORS.canvasWall, secondaryTextAlpha: 'rgba(165, 180, 252, 0.5)'
+};
+const standardScanSVG = '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect width="24" height="24" fill="' + svgColors.pathBg + '"/><path d="M3 3 H21 V21 H3 Z" fill="none" stroke="' + svgColors.border + '" stroke-width="0.5"/><path d="M4 20 V4 H20 V16 H8 V8 H16" stroke="' + svgColors.primaryText + '" stroke-width="1.5" stroke-linecap="round" fill="none"/><circle cx="5.5" cy="18.5" r="1.5" fill="' + svgColors.start + '"/><circle cx="18.5" cy="5.5" r="1.5" fill="' + svgColors.end + '"/><circle cx="5.5" cy="18.5" r="0.8" fill="' + svgColors.playerDefault + '" stroke="#FFF" stroke-width="0.2"/></svg>';
+const deepScanSVG = '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="prevDarkGradKrystV2" cx="50%" cy="50%" r="55%"><stop offset="15%" stop-color="' + svgColors.darknessStart + '" /><stop offset="35%" stop-color="rgba(10, 5, 30, 0.85)" /><stop offset="100%" stop-color="' + svgColors.darknessEnd + '" /></radialGradient></defs><rect width="24" height="24" fill="' + svgColors.pathBg + '"/><path d="M3 3 H21 V21 H3 Z" fill="none" stroke="' + svgColors.border + '" stroke-width="0.5" opacity="0.4"/><path d="M4 20 V4 H20 V16 H8 V8 H16" stroke="' + svgColors.primaryText + '" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.3"/><circle cx="5.5" cy="18.5" r="1.5" fill="' + svgColors.start + '" opacity="0.5"/><circle cx="18.5" cy="5.5" r="1.5" fill="' + svgColors.end + '" opacity="0.5"/><circle cx="12" cy="12" r="1.2" fill="' + svgColors.playerDefault + '"/><circle cx="12" cy="12" r="3" stroke="' + svgColors.accent + '" stroke-width="0.4" fill="none" opacity="0.8"><animate attributeName="r" values="1.5;4" dur="1.8s" begin="0s" repeatCount="indefinite" /><animate attributeName="opacity" values="0.8;0" dur="1.8s" begin="0s" repeatCount="indefinite" /></circle><circle cx="12" cy="12" r="2.5" stroke="' + svgColors.accent + '" stroke-width="0.3" fill="none" opacity="0.6"><animate attributeName="r" values="2;5" dur="1.8s" begin="0.6s" repeatCount="indefinite" /><animate attributeName="opacity" values="0.6;0" dur="1.8s" begin="0.6s" repeatCount="indefinite" /></circle><rect width="24" height="24" fill="url(#prevDarkGradKrystV2)"/></svg>';
+const energySurgeSVG = '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect width="24" height="24" fill="' + svgColors.pathBg + '"/><rect x="20" y="5" width="2.5" height="14" fill="' + svgColors.wall + '" rx="1"/><circle cx="6" cy="12" r="2.2" fill="' + svgColors.playerDefault + '"/><circle cx="6" cy="12" r="1.2" fill="rgba(255,255,255,0.6)"/><line x1="7.5" y1="12" x2="7.5" y2="12" stroke="' + svgColors.accent + '" stroke-width="2.5" stroke-linecap="round"><animate attributeName="x2" values="7.5; 19.5" dur="0.8s" repeatCount="indefinite" /><animate attributeName="opacity" values="1; 1; 0.8; 0" keyTimes="0; 0.7; 0.85; 1" dur="0.8s" repeatCount="indefinite" /></line><rect x="19" y="11" width="2" height="2" fill="' + svgColors.accent + '" rx="0.5" opacity="0"><animate attributeName="opacity" values="0; 0; 1; 0" keyTimes="0; 0.75; 0.85; 1" dur="0.8s" repeatCount="indefinite" /></rect></svg>';
+const levelsModeSVG = '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect width="24" height="24" fill="' + svgColors.pathBg + '"/><path d="M6 3 L3 6 V18 L6 21 H18 L21 18 V6 L18 3 Z" stroke="' + svgColors.panelAccent + '" stroke-width="1.5" fill="rgba(168, 85, 247, 0.2)" stroke-linejoin="round"><animate attributeName="stroke-width" values="1.5;2.5;1.5" dur="2s" repeatCount="indefinite" /></path><path d="M8 8 L12 6 L16 8 L12 10 Z" fill="' + svgColors.primaryText + '" opacity="0.7"/><path d="M8 12 L12 10 L16 12 L12 14 Z" fill="' + svgColors.primaryText + '" opacity="0.5"/><path d="M8 16 L12 14 L16 16 L12 18 Z" fill="' + svgColors.primaryText + '" opacity="0.3"/><circle cx="7" cy="7" r="1.2" fill="' + svgColors.key + '" opacity="0.9"><animateTransform attributeName="transform" type="translate" values="0 0; 0 10; 10 10; 10 0; 0 0" dur="8s" repeatCount="indefinite" /></circle><path d="M17 17 L16 15 L18 15 Z" fill="' + svgColors.start + '" opacity="0.8"><animateMotion path="M0 0 L-2 -3 L0 -6 L2 -3 Z" dur="3s" repeatCount="indefinite" /></path></svg>';
+const encodeSVG = (svgString) => isBrowser ? btoa(svgString) : '';
+const MODE_IMAGES = {
+    [GameMode.NORMAL]: 'data:image/svg+xml;base64,' + encodeSVG(standardScanSVG),
+    [GameMode.DARKNESS]: 'data:image/svg+xml;base64,' + encodeSVG(deepScanSVG),
+    [GameMode.DASH]: 'data:image/svg+xml;base64,' + encodeSVG(energySurgeSVG),
+    [GameMode.LEVELS]: 'data:image/svg+xml;base64,' + encodeSVG(levelsModeSVG),
+};
+const LOCAL_STORAGE_KEYS = {
+    CONTROLS: 'krystCoreLabyrinthControls_v2', HIGHSCORES: 'krystCoreLabyrinthHighscores_v2',
+    LEVEL_PROGRESS: 'krystCoreLabyrinthLevelProgress_v2', MAX_UNLOCKED_LEVEL: 'krystCoreLabyrinthMaxUnlockedLevel_v2',
+    UNLOCKED_AURA_PALETTE_IDS: 'krystCoreLabyrinthUnlockedPalettes_v1', UNLOCKED_CORE_MATRIX_IDS: 'krystCoreLabyrinthUnlockedMatrices_v1',
+    UNLOCKED_TRAIL_SIGNATURE_IDS: 'krystCoreLabyrinthUnlockedTrails_v1', SELECTED_CUSTOM_ASSEMBLY: 'krystCoreLabyrinthSelectedAssembly_v1',
+};
+const INITIAL_CONTROLS = { up: ['ArrowUp', 'KeyW'], down: ['ArrowDown', 'KeyS'], left: ['ArrowLeft', 'KeyA'], right: ['ArrowRight', 'KeyD'], };
+// --- END OF INLINED constants.ts ---
+
+// --- START OF INLINED lib/localStorage.ts ---
+console.log('[localStorage.ts inline] Loading...');
+function loadFromLocalStorage(key, defaultValue) {
+    try {
+        const item = window.localStorage.getItem(key);
+        return item ? JSON.parse(item) : defaultValue;
+    }
+    catch (error) {
+        console.warn('Error reading localStorage key "' + key + '":', error);
+        return defaultValue;
+    }
+}
+function saveToLocalStorage(key, value) {
+    try {
+        window.localStorage.setItem(key, JSON.stringify(value));
+    }
+    catch (error) {
+        console.warn('Error setting localStorage key "' + key + '":', error);
+    }
+}
+// --- END OF INLINED lib/localStorage.ts ---
+
+// --- START OF INLINED lib/soundManager.ts ---
+console.log('[soundManager.ts inline] Loading...');
+const SoundEffectFiles = {
+    [SoundEffect.PLAYER_MOVE]: 'assets/sounds/player_move.wav',
+    [SoundEffect.PLAYER_DASH]: 'assets/sounds/player_dash.wav',
+    [SoundEffect.WALL_BUMP]: 'assets/sounds/wall_bump.wav',
+    [SoundEffect.KEY_COLLECT]: 'assets/sounds/key_collect.mp3',
+    [SoundEffect.GAME_WIN]: 'assets/sounds/game_win.mp3',
+    [SoundEffect.GAME_LOSE]: 'assets/sounds/game_lose.mp3',
+    [SoundEffect.LEVEL_START]: 'assets/sounds/level_start.wav',
+    [SoundEffect.BUTTON_CLICK]: 'assets/sounds/button_click.wav',
+    [SoundEffect.BUTTON_CLICK_SECONDARY]: 'assets/sounds/button_click_secondary.wav',
+    [SoundEffect.SKIN_SELECT]: 'assets/sounds/skin_select.wav',
+    [SoundEffect.SKIN_EQUIP]: 'assets/sounds/skin_equip.mp3',
+    [SoundEffect.SCREEN_TRANSITION]: 'assets/sounds/screen_transition.wav',
+    [SoundEffect.TIME_TICK_LOW]: 'assets/sounds/time_tick_low.wav',
+    [SoundEffect.TIME_UP]: 'assets/sounds/time_up.mp3',
+};
+function playSound(sound, volume = 0.6) {
+    const filePath = SoundEffectFiles[sound];
+    if (filePath) {
+        try {
+            const audio = new Audio(filePath);
+            audio.volume = Math.max(0, Math.min(1, volume));
+            const playPromise = audio.play();
+            if (playPromise !== undefined) {
+                playPromise.catch(error => { /* console.warn('Could not play sound "' + sound + '" from ' + filePath + ':', error); */ });
+            }
+        }
+        catch (e) {
+            console.error('Error initializing sound object for "' + sound + '" from ' + filePath + ':', e);
+        }
+    }
+}
+function preloadSounds() {
+    console.log('[soundManager.ts inline] Preloading sounds...');
+    for (const key in SoundEffectFiles) {
+        const soundEffectKey = key;
+        const path = SoundEffectFiles[soundEffectKey];
+        if (path) {
+            try {
+                const audio = new Audio(path);
+            }
+            catch (e) {
+                console.error('Error preloading sound "' + soundEffectKey + '" from ' + path + ':', e);
+            }
+        }
+    }
+}
+// --- END OF INLINED lib/soundManager.ts ---
+
+// --- START OF INLINED lib/mazeGenerator.ts ---
+console.log('[mazeGenerator.ts inline] Loading...');
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+}
+const MAX_GENERATION_ATTEMPTS_DASH = 50;
+function simulateDash(grid, currentPos, dx, dy) {
+    let { x, y } = currentPos;
+    while (true) {
+        const nextX = x + dx;
+        const nextY = y + dy;
+        if (grid[nextY] && grid[nextY][nextX] && grid[nextY][nextX].isPath) {
+            x = nextX;
+            y = nextY;
+        }
+        else {
+            break;
+        }
+    }
+    return { x, y };
+}
+function getDashSolutionInfo(grid, start, end) {
+    const queue = [];
+    const visited = new Set();
+    queue.push({ pos: start, dashes: 0 });
+    visited.add(start.x + ',' + start.y);
+    let head = 0;
+    while (head < queue.length) {
+        const current = queue[head++];
+        if (current.pos.x === end.x && current.pos.y === end.y) {
+            return { solvable: true, dashes: current.dashes };
+        }
+        if (current.dashes > grid.length * grid[0].length)
+            continue;
+        const directions = [{ dx: 0, dy: -1 }, { dx: 0, dy: 1 }, { dx: -1, dy: 0 }, { dx: 1, dy: 0 }];
+        for (const dir of directions) {
+            const landingPos = simulateDash(grid, current.pos, dir.dx, dir.dy);
+            const landingPosKey = landingPos.x + ',' + landingPos.y;
+            if ((landingPos.x === current.pos.x && landingPos.y === current.pos.y) || visited.has(landingPosKey)) {
+                continue;
+            }
+            visited.add(landingPosKey);
+            queue.push({ pos: landingPos, dashes: current.dashes + 1 });
+        }
+    }
+    return { solvable: false, dashes: 0 };
+}
+function createBaseMaze(width, height) {
+    const w = width % 2 === 0 ? width + 1 : width;
+    const h = height % 2 === 0 ? height + 1 : height;
+    const grid = Array.from({ length: h }, () => Array.from({ length: w }, () => ({ isWall: true, isPath: false })));
+    const stack = [];
+    const startPos = { x: 1, y: 1 };
+    grid[startPos.y][startPos.x] = { isWall: false, isPath: true };
+    stack.push(startPos);
+    while (stack.length > 0) {
+        const current = stack[stack.length - 1];
+        const neighbors = [];
+        const directions = [
+            { dx: 0, dy: -2, wallDx: 0, wallDy: -1 }, { dx: 0, dy: 2, wallDx: 0, wallDy: 1 },
+            { dx: -2, dy: 0, wallDx: -1, wallDy: 0 }, { dx: 2, dy: 0, wallDx: 1, wallDy: 0 },
+        ];
+        shuffleArray(directions);
+        for (const dir of directions) {
+            const nx = current.x + dir.dx;
+            const ny = current.y + dir.dy;
+            if (nx > 0 && nx < w - 1 && ny > 0 && ny < h - 1 && grid[ny][nx].isWall) {
+                neighbors.push({
+                    pos: { x: nx, y: ny },
+                    wall: { x: current.x + dir.wallDx, y: current.y + dir.wallDy },
+                });
+            }
+        }
+        if (neighbors.length > 0) {
+            const { pos: nextPos, wall: wallPos } = neighbors[0];
+            grid[nextPos.y][nextPos.x] = { isWall: false, isPath: true };
+            grid[wallPos.y][wallPos.x] = { isWall: false, isPath: true };
+            stack.push(nextPos);
+        }
+        else {
+            stack.pop();
+        }
+    }
+    let endPos = { x: w - 2, y: h - 2 };
+    let endSet = false;
+    for (let yTry = h - 2; yTry >= 1; yTry--) {
+        for (let xTry = w - 2; xTry >= 1; xTry--) {
+            if (grid[yTry]?.[xTry]?.isPath && !(yTry === startPos.y && xTry === startPos.x)) {
+                endPos = { x: xTry, y: yTry };
+                endSet = true;
+                break;
+            }
+        }
+        if (endSet)
+            break;
+    }
+    if (!endSet) {
+        for (let r_fallback = 1; r_fallback < h - 1; r_fallback++) {
+            for (let c_fallback = 1; c_fallback < w - 1; c_fallback++) {
+                if (grid[r_fallback]?.[c_fallback]?.isPath && !(r_fallback === startPos.y && c_fallback === startPos.x)) {
+                    endPos = { x: c_fallback, y: r_fallback };
+                    endSet = true;
+                    break;
+                }
+            }
+            if (endSet)
+                break;
+        }
+    }
+    if (endPos.x === startPos.x && endPos.y === startPos.y && (w > 3 || h > 3)) {
+        let altEndFound = false;
+        for (let r_alt = h - 2; r_alt >= 1; r_alt--) {
+            for (let c_alt = w - 2; c_alt >= 1; c_alt--) {
+                if (grid[r_alt]?.[c_alt]?.isPath && !(r_alt === startPos.y && c_alt === startPos.x)) {
+                    endPos = { x: c_alt, y: r_alt };
+                    altEndFound = true;
+                    break;
+                }
+            }
+            if (altEndFound)
+                break;
+        }
+        if (!altEndFound)
+            endPos = (startPos.x === 1 && startPos.y === 1 && w > 1) ? { x: w - 2, y: h - 2 } : { x: 1, y: 1 };
+    }
+    return { grid, startPos, endPos };
+}
+function generateMaze(width, height, gameMode) {
+    if (gameMode === GameMode.DASH) {
+        let attempts = 0;
+        let bestCandidateSoFar = null;
+        let currentMinDashSteps = 5;
+        let dashBraidingProbability = 0.40;
+        if (width === 15) {
+            currentMinDashSteps = 10;
+            dashBraidingProbability = 0.40;
+        }
+        else if (width === 21) {
+            currentMinDashSteps = 20;
+            dashBraidingProbability = 0.28;
+        }
+        do {
+            const { grid: baseGrid, startPos: currentStart, endPos: currentEnd } = createBaseMaze(width, height);
+            let candidateGrid = JSON.parse(JSON.stringify(baseGrid));
+            const candidateWalls = [];
+            const hMaze = candidateGrid.length;
+            const wMaze = candidateGrid[0].length;
+            for (let y = 1; y < hMaze - 1; y++) {
+                for (let x = 1; x < wMaze - 1; x++) {
+                    if (candidateGrid[y][x].isWall) {
+                        const isHorizontalCandidate = (x > 0 && x < wMaze - 1 && candidateGrid[y][x - 1]?.isPath && candidateGrid[y][x + 1]?.isPath);
+                        const isVerticalCandidate = (y > 0 && y < hMaze - 1 && candidateGrid[y - 1]?.[x]?.isPath && candidateGrid[y + 1]?.[x]?.isPath);
+                        if (isHorizontalCandidate || isVerticalCandidate) {
+                            candidateWalls.push({ x, y });
+                        }
+                    }
+                }
+            }
+            shuffleArray(candidateWalls);
+            const numToBraid = Math.floor(candidateWalls.length * dashBraidingProbability);
+            for (let i = 0; i < numToBraid; i++) {
+                const pos = candidateWalls[i];
+                if (candidateGrid[pos.y][pos.x].isWall) {
+                    candidateGrid[pos.y][pos.x] = { isWall: false, isPath: true };
+                }
+            }
+            if (!candidateGrid[currentStart.y]?.[currentStart.x]?.isPath || !candidateGrid[currentEnd.y]?.[currentEnd.x]?.isPath) {
+                attempts++;
+                continue;
+            }
+            const solutionInfo = getDashSolutionInfo(candidateGrid, currentStart, currentEnd);
+            if (solutionInfo.solvable && solutionInfo.dashes >= currentMinDashSteps) {
+                candidateGrid[currentStart.y][currentStart.x].isStart = true;
+                candidateGrid[currentEnd.y][currentEnd.x].isEnd = true;
+                return { grid: candidateGrid, start: currentStart, end: currentEnd };
+            }
+            if (solutionInfo.solvable) {
+                if (!bestCandidateSoFar || solutionInfo.dashes > bestCandidateSoFar.dashes) {
+                    bestCandidateSoFar = {
+                        grid: JSON.parse(JSON.stringify(candidateGrid)),
+                        start: { ...currentStart },
+                        end: { ...currentEnd },
+                        dashes: solutionInfo.dashes,
+                    };
+                }
+            }
+            attempts++;
+        } while (attempts < MAX_GENERATION_ATTEMPTS_DASH);
+        if (bestCandidateSoFar && bestCandidateSoFar.dashes >= currentMinDashSteps) {
+            console.warn('Dash maze generation: Used a candidate found within ' + MAX_GENERATION_ATTEMPTS_DASH + ' attempts that meets ' + currentMinDashSteps + ' dashes (found ' + bestCandidateSoFar.dashes + ').');
+            bestCandidateSoFar.grid[bestCandidateSoFar.start.y][bestCandidateSoFar.start.x].isStart = true;
+            bestCandidateSoFar.grid[bestCandidateSoFar.end.y][bestCandidateSoFar.end.x].isEnd = true;
+            return { grid: bestCandidateSoFar.grid, start: bestCandidateSoFar.start, end: bestCandidateSoFar.end };
+        }
+        else {
+            console.warn('Dash maze generation: Failed to find a maze meeting ' + currentMinDashSteps + ' dashes after ' + MAX_GENERATION_ATTEMPTS_DASH + ' attempts. ' +
+                (bestCandidateSoFar ? 'Best found was solvable in ' + bestCandidateSoFar.dashes + ' dashes. ' : 'No solvable maze found in attempts. ') +
+                'Using emergency fallback.');
+            const { grid: fbGrid, startPos: fbStart, endPos: fbEnd } = createBaseMaze(width, height);
+            const fbDashBraidingProbability = 0.50;
+            const fbCandidateWalls = [];
+            const hFb = fbGrid.length;
+            const wFb = fbGrid[0].length;
+            for (let y = 1; y < hFb - 1; y++)
+                for (let x = 1; x < wFb - 1; x++)
+                    if (fbGrid[y][x].isWall) {
+                        const hC = (x > 0 && x < wFb - 1 && fbGrid[y][x - 1]?.isPath && fbGrid[y][x + 1]?.isPath);
+                        const vC = (y > 0 && y < hFb - 1 && fbGrid[y - 1]?.[x]?.isPath && fbGrid[y + 1]?.[x]?.isPath);
+                        if (hC || vC)
+                            fbCandidateWalls.push({ x, y });
+                    }
+            shuffleArray(fbCandidateWalls);
+            const fbNumToBraid = Math.floor(fbCandidateWalls.length * fbDashBraidingProbability);
+            for (let i = 0; i < fbNumToBraid; i++) {
+                const pos = fbCandidateWalls[i];
+                if (fbGrid[pos.y][pos.x].isWall)
+                    fbGrid[pos.y][pos.x] = { isWall: false, isPath: true };
+            }
+            fbGrid[fbStart.y][fbStart.x].isStart = true;
+            fbGrid[fbEnd.y][fbEnd.x].isEnd = true;
+            return { grid: fbGrid, start: fbStart, end: fbEnd };
+        }
+    }
+    else {
+        const { grid, startPos, endPos } = createBaseMaze(width, height);
+        let braidingFactor;
+        switch (gameMode) {
+            case GameMode.NORMAL:
+            case GameMode.DARKNESS:
+                braidingFactor = 0.025;
+                break;
+            default:
+                braidingFactor = 0.025;
+                break;
+        }
+        const braidAttemptsRatio = 0.40;
+        const targetBraids = Math.floor(grid[0].length * grid.length * braidingFactor);
+        const braidAttempts = Math.floor(grid[0].length * grid.length * braidAttemptsRatio);
+        let wallsBraided = 0;
+        for (let i = 0; i < braidAttempts && wallsBraided < targetBraids; i++) {
+            const x = Math.floor(Math.random() * (grid[0].length - 2)) + 1;
+            const y = Math.floor(Math.random() * (grid.length - 2)) + 1;
+            if (grid[y][x].isWall) {
+                const isHorizontalCandidate = (x > 0 && x < grid[0].length - 1 && grid[y][x - 1]?.isPath && grid[y][x + 1]?.isPath);
+                const isVerticalCandidate = (y > 0 && y < grid.length - 1 && grid[y - 1]?.[x]?.isPath && grid[y + 1]?.[x]?.isPath);
+                if (isHorizontalCandidate || isVerticalCandidate) {
+                    if (!grid[y][x].isStart && !grid[y][x].isEnd && !grid[y][x].isKey) {
+                        grid[y][x] = { isWall: false, isPath: true };
+                        wallsBraided++;
+                    }
+                }
+            }
+        }
+        grid[startPos.y][startPos.x].isStart = true;
+        grid[endPos.y][endPos.x].isEnd = true;
+        return { grid, start: startPos, end: endPos };
+    }
+}
+function parseLevel(levelData) {
+    const { width, height, mazeDefinition } = levelData;
+    const grid = Array.from({ length: height }, (_, rowIndex) => Array.from({ length: width }, (_, colIndex) => {
+        const cell = { isWall: false, isPath: true };
+        const char = mazeDefinition[rowIndex]?.[colIndex];
+        switch (char) {
+            case 'W':
+                cell.isWall = true;
+                cell.isPath = false;
+                break;
+            case 'S':
+                cell.isStart = true;
+                break;
+            case 'E':
+                cell.isEnd = true;
+                break;
+            case 'K':
+                cell.isKey = true;
+                break;
+            case 'H':
+                cell.isHunter = true;
+                break;
+            case 'P':
+            case ' ': break;
+            default:
+                cell.isWall = true;
+                cell.isPath = false;
+                break;
+        }
+        return cell;
+    }));
+    let start = { x: -1, y: -1 };
+    let end = { x: -1, y: -1 };
+    let keyPos = undefined;
+    const hunterStartPositions = [];
+    for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
+            if (grid[y][x].isStart)
+                start = { x, y };
+            if (grid[y][x].isEnd)
+                end = { x, y };
+            if (grid[y][x].isKey)
+                keyPos = { x, y };
+            if (grid[y][x].isHunter)
+                hunterStartPositions.push({ x, y });
+        }
+    }
+    if (start.x === -1) {
+        console.warn('Start \'S\' not found in level \'' + levelData.name + '\', defaulting.');
+        outerS: for (let r = 0; r < height; r++)
+            for (let c = 0; c < width; c++)
+                if (grid[r][c].isPath) {
+                    start = { x: c, y: r };
+                    grid[r][c].isStart = true;
+                    break outerS;
+                }
+        if (start.x === -1 && width > 0 && height > 0)
+            start = { x: 0, y: 0 };
+    }
+    if (end.x === -1) {
+        console.warn('End \'E\' not found in level \'' + levelData.name + '\', defaulting.');
+        outerE: for (let r = height - 1; r >= 0; r--)
+            for (let c = width - 1; c >= 0; c--)
+                if (grid[r][c].isPath && !(r === start.y && c === start.x)) {
+                    end = { x: c, y: r };
+                    grid[r][c].isEnd = true;
+                    break outerE;
+                }
+        if (end.x === -1 && width > 0 && height > 0)
+            end = { x: width - 1, y: height - 1 };
+    }
+    return { grid, start, end, keyPos, hunterStartPositions };
+}
+// --- END OF INLINED lib/mazeGenerator.ts ---
+
+// --- START OF INLINED lib/levelData.ts ---
+console.log('[levelData.ts inline] Loading...');
+const LEVELS_DATA = [
+  { id: 1, name: "First Steps", description: "Learn to navigate. Reach the glowing exit.", width: 7, height: 5, mazeDefinition: [ "WWWWWWW", "WSPPPPW", "WWWWW W", "WPPPPPE", "WWWWWWW", ], unlocksCoreMatrixId: CORE_MATRIX_ITEMS.find(c => c.name === 'Vector Tri-Core')?.id, },
+  { id: 2, name: "A Simple Turn", description: "A small twist in the path.", width: 9, height: 7, mazeDefinition: [ "WWWWWWWWW", "WSPPPPPPW", "W W WWWWW", "W W P   W", "W WWWPPPW", "WPEEEEEEW", "WWWWWWWWW", ], unlocksAuraPaletteId: AURA_PALETTES.find(p => p.name === 'Arcane Fuchsia')?.id, },
+  { id: 3, name: "The First Key", description: "Find the golden key to unlock the way forward.", width: 9, height: 9, mazeDefinition: [ "WWWWWWWWW", "WSKPWP EPW", "W WWW W W", "W PWP P W", "W W W WWW", "W P P P W", "WWWWWWW W", "WPPPPPPPW", "WWWWWWWWW", ], unlocksCoreMatrixId: CORE_MATRIX_ITEMS.find(c => c.name === 'Block Matrix')?.id, },
+  { id: 4, name: "Guarded Path", description: "The key is hidden, the path is winding.", width: 11, height: 9, mazeDefinition: [ "WWWWWWWWWWW", "WSPPPWPPPW", "W W W K WW", "W P W WWW W", "W WWW P P W", "W P W WWW W", "W W W P EPW", "WPPPPPW WWW", "WWWWWWWWWWW", ], unlocksAuraPaletteId: AURA_PALETTES.find(p => p.name === 'Crimson Core')?.id, },
+  { id: 5, name: "Crossroads Choice", description: "One key, many paths. Choose wisely.", width: 13, height: 11, mazeDefinition: [ "WWWWWWWWWWWWW", "WSPPPWPPPKPPW", "W W WWW W WWW", "W W P W W P W", "W WWW W WWW W", "W P W P P W W", "W W W WWW W W", "W P P W P P W", "W WWWWW W WWW", "WPEPPPPPPPPPW", "WWWWWWWWWWWWW", ], unlocksCoreMatrixId: CORE_MATRIX_ITEMS.find(c => c.name === 'Hexa-Cell')?.id, },
+  { id: 6, name: "The Long Search", description: "A larger maze. The key is well protected.", width: 15, height: 11, mazeDefinition: [ "WWWWWWWWWWWWWWW", "WSPPPPPPWPPPEPW", "W W WWWWW W WWW W", "W W P   W W P W W", "W WWW WWW W WWW W", "W P K P W W P P W", "W WWWWW W WWWWW W", "W P P P W P P P W", "W WWW WWW WWW W W", "WPPPPPPPPPPPW W", "WWWWWWWWWWWWWWW", ], unlocksAuraPaletteId: AURA_PALETTES.find(p => p.name === 'Veridian Stream')?.id, },
+  { id: 7, name: "Clockwork Precision", description: "Narrow passages and a strict time limit! The key is in a tight spot. Can you beat the clock?", width: 11, height: 11, timeLimit: 25, mazeDefinition: [ "WWWWWWWWWWW", "WEPKPWPWPW", "W W W W W W", "WPW W W W W", "W W W W W W", "WPWPWPWPWPW", "W W W W W W", "W W W W W W", "W W W W W W", "WSPPPPPPPPW", "WWWWWWWWWWW", ], unlocksCoreMatrixId: CORE_MATRIX_ITEMS.find(c => c.name === 'Facet Prism')?.id, },
+  { id: 8, name: "Labyrinthine Core", description: "Deep within the maze, the exit awaits the worthy.", width: 17, height: 13, mazeDefinition: [ "WWWWWWWWWWWWWWWWW", "WSPWPWPWPWPWPWPW", "WPPPPPPPPPPPPPPPW", "WPWPWPKPWPWPWPWPEPW", "WPWPWPWPWPWPWPWPWPW", "WPWPWPWPWPWPWPWPWPW", "WPWPWPWPWPWPWPWPWPW", "WPWPWPWPWPWPWPWPWPW", "WPWPWPWPWPWPWPWPWPW", "WPWPWPWPWPWPWPWPWPW", "WPWPWPWPWPWPWPWPWPW", "WPPPPPPPPPPPPPPPW", "WWWWWWWWWWWWWWWWW", ], unlocksAuraPaletteId: AURA_PALETTES.find(p => p.name === 'Void Violet')?.id, },
+  { id: 9, name: "The Vault", description: "A complex lock. The key is the only way.", width: 19, height: 15, mazeDefinition: [ "WWWWWWWWWWWWWWWWWWW", "WSPPPPPPPPPPPWPPW", "W W WWWWWWWWW W W W", "W W PKPWPWPWPWP W W", "W WWW W WWW WWW W W", "W P W W P P W P W", "W W WWW W WWW W W W", "W W P W W P W W P W", "W WWW W WWW WWW W W", "W P W W P P W P W", "W W WWW W WWW W W W", "W W P W W P W W P W", "W WWW WWWWW WWW W W", "WPEPPPPPPPPPPPPPW", "WWWWWWWWWWWWWWWWWWW", ], },
+  { id: 10, name: "Final Passage", description: "The ultimate test of navigation. Claim your mastery.", width: 21, height: 15, mazeDefinition: [ "WWWWWWWWWWWWWWWWWWWWW", "WSPWPWPWPWPWPWPWPWPW", "WPWPWPWPWPWPWPWPWPWW", "WPWPWPWPWPWPWPWPWPWW", "WPWPWPWPWPWPWPWPWPWW", "WPWPWPWPWPWPWPWPWPWW", "WPWPWPWPWPWPWPWPWPWW", "WPWPWPWPWPWP K PWPWPWW", "WPWPWPWPWPWPWPWPWPWW", "WPWPWPWPWPWPWPWPWPWW", "WPWPWPWPWPWPWPWPWPWW", "WPWPWPWPWPWPWPWPWPWW", "WPWPWPWPWPWPWPWPWPWW", "WPEPPPPPPPPPPPPPPPW", "WWWWWWWWWWWWWWWWWWWWW", ], },
+  { id: 11, name: "The Chronos Dash", description: "A winding path that tests precision and foresight. Race against the clock to unlock a temporal aura!", width: 15, height: 13, timeLimit: 35, mazeDefinition: [ "WWWWWWWWWWWWWWW", "WSPWPWPWPWPWPW", "WPWPWPWPWPWPWW", "WPWPWPWPWPWPKPW", "WPWPWPWPWPWPWW", "WPWPWPWPWPWPWPW", "WPWPWPWPWPWPWPW", "WPWPWPWPWPWPWPW", "WPWPWPWPWPWPWW", "WKPPPPPPPPPPPEW", "WPWPWPWPWPWPWW", "WPWPWPWPWPWPWPW", "WWWWWWWWWWWWWWW", ], },
+  { id: 12, name: "Crystalline Caves", description: "A glittering maze of false leads and fragile hope. The key is well hidden.", width: 17, height: 15, mazeDefinition: [ "WWWWWWWWWWWWWWWWW", "WSPPPPPPWPPPPPPPW", "W WWW WWW WWW WWW W", "W P W P P P W P W", "W W WWW W W WWW W W", "W P W K W W P W P W", "W WWW W W W WWW W W", "W P P P W P P P W", "W W WWW W W WWW W W", "W P W P W W P W P W", "W WWW WWW WWW WWW W", "W P P P P W P P PW", "W W WWWWW W WWWWW W", "WPPPPPPPPPWPPPPEW", "WWWWWWWWWWWWWWWWW", ], },
+  { id: 13, name: "The Gauntlet", description: "You are not alone! A Sentinel stalks these halls. Evade and escape!", width: 13, height: 11, mazeDefinition: [ "WWWWWWWWWWWWW", "WSPPPWPPPEPW", "WPWPWPWPWPWPW", "WPWPWPWPWPWPW", "WPWPWPHPWPWWW", "WPWPWPWPWPWPW", "WPWPWPWPWPWPW", "WPWPPPKPWPWPW", "WPWWWPWWWWW W", "WPPPPPPPPPPPW", "WWWWWWWWWWWWW", ], hunterMovementType: 'tile', hunterPhasesThroughWalls: false, },
+  { id: 14, name: "Shadow Warrens", description: "Deeper still, where shadows dance and the Sentinel's senses are keen. Stay alert!", width: 19, height: 15, mazeDefinition: [ "WWWWWWWWWWWWWWWWWWW", "WSPPPWPPPPPKPPPPPW", "WPWPWPWPWWWWW WWP W", "WPWPWPWPHPWPWPWPWPW", "WPWPWPWPWPWPWPWPWPW", "WPWPWPWPWPWPWPWPWPW", "WPWPPPWPWPWPWPWPWPW", "WPWPWPWPWPWPWPWPWPW", "WPWPWPWPWPWPWPWPWPW", "WPWPWPWPWPWPWPWPWPW", "WPWPWPWPWPWPWPWPWPW", "WPWPWPWPWPWPWPWPWPW", "WPWPWPPWWP PWPWP W", "WPEPPWPPPPPPPPPPW", "WWWWWWWWWWWWWWWWWWW", ], hunterMovementType: 'tile', hunterPhasesThroughWalls: false, },
+  { id: 15, name: "Hunter's Redoubt", description: "Two Sentinels stalk this final maze with unwavering focus. Only the truly skilled will unlock the final aura. Good luck!", width: 21, height: 17, mazeDefinition: [ "WWWWWWWWWWWWWWWWWWWWW", "WSPPPWPWPWPWPWPWPWPWW", "WPWPPPPWPPPWP PPPWPPPWW", "WPWPWPPHWPWPPPKPPWPWW", "WPWPWPWPWPWPWPWPPWPPW", "WPWPWPWPWPWPWWWWEPWPWW", "WPWPWPWPWPWPWPWPWPWPW", "WPWPWPWPWPWPWPWPWPWPW", "WPWPWP P P PWPPPWP PPPWW", "WPWPWPPHPPPWP PPPWPP PW", "WPWPWPWPWPWPWPWPWPWP PW", "WPWPWPWPWPWPWPWPWPWPW", "WPWPWPWPWPWPWPWPWPWPW", "WPWPWPWPWPWPWPWPWPWPW", "WPWPWPWPWPWPWPWPWPWPW", "WPPPPPWPWPWPWPWPWPWPW", "WWWWWWWWWWWWWWWWWWWWW", ], hunterMovementType: 'tile', hunterPhasesThroughWalls: false, },
+  { id: 16, name: "Relentless Pursuit", description: "A single, highly agile Sentinel is on your tail. Its movements are fluid and direct, ignoring walls. Use the open spaces to your advantage, but don't get cornered!", width: 15, height: 13, mazeDefinition: [ "WWWWWWWWWWWWWWW", "WSPPPPPPPPPPPPW", "W WPWWWWWWWPW W", "W P W   H P W P W", "W P WWWWWWWPW W", "W P P     P P W", "W WWWWPWWWPWWWW", "W P P     P P W", "W W WWWWWWWPW W", "W P W P   P W P W", "W W WWWWWWWPW W", "WPPPPPPPPPPPPEW", "WWWWWWWWWWWWWWW", ], hunterMovementType: 'continuous', hunterPhasesThroughWalls: true, },
+  { id: 17, name: "Crossfire Phantoms", description: "Two Sentinels patrol this long, narrow passage, phasing through barriers. Timing and quick decisions are crucial to slip past them and grab the key.", width: 21, height: 9, mazeDefinition: [ "WWWWWWWWWWWWWWWWWWWWW", "WSPHPWPWPWPWPKPWPWPEW", "W P P P P W W P P P W", "W WWWWWWW W WWWWWWW W", "W   H               W", "W WWWWWWW W WWWWWWW W", "W P P P P W W P P P W", "WPPPPPPPPPWPPPPPPPPPW", "WWWWWWWWWWWWWWWWWWWWW", ], hunterMovementType: 'continuous', hunterPhasesThroughWalls: true, },
+  { id: 18, name: "Ethereal Swarm", description: "The Labyrinth AI has unleashed a swarm of phasing Sentinels. Can you navigate this chaotic dance, secure the key, and find the exit?", width: 19, height: 17, mazeDefinition: [ "WWWWWWWWWWWWWWWWWWW", "WSPP P PPPPPPPPPPW", "W PW W WWWWWWWWW W", "W H  W P K P W P W", "WWWW W P W W P W W", "W P  P WPH P W P W", "W W WWWWWW W W W W", "W P P    W W W P W", "W W WWHPWW W W W W", "W P P    W W W P W", "W W WWWWWW W W W W", "W P  P W W P W P W", "WWWW W P W W P W W", "W P  W P W P W P W", "W PW W WWWWWWWWW W", "WPPPPPPPPPPPPPEPW", "WWWWWWWWWWWWWWWWWWW", ], hunterMovementType: 'continuous', hunterPhasesThroughWalls: true, },
+  { id: 19, name: "Impuls-Korridore", description: "Präzise Dashes sind hier der Schlüssel. Finde die richtige Flugbahn durch lange Gänge und offene Bereiche, um den Schlüssel und dann den Ausgang zu erreichen.", width: 11, height: 9, mazeDefinition: [ "WWWWWWWWWWW", "WSPPPPPPPPW", "WWWWWWWWWPW", "WPPPPPPPPKW", "WPWWWWWWWWWW", "WPWWWWWWWWWW", "WPWWWWWWWWWW", "WEPPPPPPPPW", "WWWWWWWWWWW", ], isDashLevel: true, },
+  { id: 20, name: "Schattenschleier", description: "Die Sicht ist stark eingeschränkt. Nur ein kleiner Bereich um dich herum ist sichtbar. Verlasse dich auf dein Gedächtnis und taste dich voran zum versteckten Schlüssel.", width: 17, height: 15, mazeDefinition: [ "WWWWWWWWWWWWWWWWW", "WSPPPPPPPPPPPPPPW", "WPWWWWWWWWWWWWWPW", "WPWPPPPPPPPPPWPPW", "WPWPKWWWWWWWWWWPW", "WPWPWWWWWWWWWWPPW", "WPWPPPPPPPPPPPPW", "WPWWWWWWWWWWWWWPW", "WPWPPPPPPPPPPWPW", "WPWWWWWWWWWWWWWPW", "WPPPPPPPPPPPPPPPW", "WWWWWWWWWWWWWPWPW", "WPPPPPPPPPPWPWPPW", "WPEEEEEEEEEEEPEPW", "WWWWWWWWWWWWWWWWW" ], isDarknessLevel: true, unlocksTrailSignatureId: TRAIL_SIGNATURE_ITEMS.find(t => t.name === 'Solid Stream')?.id, },
+  { id: 21, name: "Spiegelsteuerung", description: "Die Kryst-Energie in diesem Sektor verzerrt deine Wahrnehmung. Deine Steuerung ist invertiert! Links ist rechts, oben ist unten. Kannst du dich anpassen?", width: 13, height: 13, mazeDefinition: [ "WWWWWWWWWWWWW", "WSPKPWPPPWPEW", "W W W WWW W W", "W P W P P W W", "W WWW W WWW W", "W P P P W P W", "W W WWWWW W W", "W P W P P W W", "W WWW W WWW W", "W P W W P W W", "W W WWW W W W", "WPPPPPPPWPPPW", "WWWWWWWWWWWWW", ], controlScheme: 'mirrored', },
+  { id: 22, name: "Ghostly Corridor", description: "A narrow, winding corridor with a single, persistent phantom. Careful timing is key.", width: 13, height: 9, mazeDefinition: [ "WWWWWWWWWWWWW", "WSPPPPPPPPPPW", "W WWWWWWWPWPW", "W P H    PWPW", "W PWWWWWWWPWW", "W P      PEPW", "W WWWWWWWWWPW", "WPPPPPPPPPPPW", "WWWWWWWWWWWWW", ], hunterMovementType: 'continuous', hunterPhasesThroughWalls: true, },
+  { id: 23, name: "Phantom Crossroads", description: "Two phantoms guard a central chamber. You'll need to lure them away to reach the key and escape.", width: 15, height: 15, mazeDefinition: [ "WWWWWWWWWWWWWWW", "WSPPPPPPPPPPPPW", "WPWWWWWPWWWWWPW", "WPW  H PPKPPPW", "WPW WWPW WW W PW", "WPW    P   W W PW", "WPPWWWWPWWWW W PW", "WPW P  H P P W PW", "WPW WWWWWW P W PW", "WPW        P W PW", "WPWWWWWWWWWW W PW", "WPPWWPPPPPPW W PW", "WPW W      W W PW", "WPW WPPPPPPWPEPW", "WWWWWWWWWWWWWWW", ], hunterMovementType: 'continuous', hunterPhasesThroughWalls: true, },
+  { id: 24, name: "Spectral Maze", description: "A larger, more complex maze haunted by three agile phantoms. The exit is well-hidden, and time is short!", width: 19, height: 19, timeLimit: 90, mazeDefinition: [ "WWWWWWWWWWWWWWWWWWW", "WSPPPWPPPHPWPWPPPW", "WPW WWWPWWWPW W W W", "WPKW P W   W W W W W", "WPW WW W WWWWW W W W", "W P PW W P H P W W W", "W WWW WW W WWWWW W W", "W P W P P W P P W P P W W", "W W WWWW W W WWWWW W", "W P H  P W W P P P W", "W WWWW W W WWWW W W", "W P  P W W P P P W W", "W W WWWW W WWW W W W", "W W P W P W P P W P P W", "W W W WWWWWW W W W W", "W W P  P P P W W W W", "WPWWWWWWWWWWWWWWWPW", "WPPPPPPPPPPPPPPPEW", "WWWWWWWWWWWWWWWWWWW", ], hunterMovementType: 'continuous', hunterPhasesThroughWalls: true, },
+  { id: 25, name: "Phantom Overlord's Lair", description: "The ultimate test against phasing sentinels. Four of them patrol this vast, intricate lair. Only the most skilled can survive and escape the ticking clock.", width: 21, height: 21, timeLimit: 120, mazeDefinition: [ "WWWWWWWWWWWWWWWWWWWWW", "WSHPWPWPWHWPWPWHWPWPW", "WPWWWWWPWWWPWWWWWPWPW", "WPKPWP W P W PWPW PWPW", "WPW WW W W W W WW W WPW", "W P PW W P H P W  W WPW", "W WWW WW W WWWWW W WWPW", "W P P  W W P   P W W PW", "W W WWWW W W WWWWW W PW", "W P    P W W P   P W PW", "W W W WW W W W W W W PW", "W P P  P W W P P P W PW", "W W WWWW W WWW W W W PW", "W W P    W P P W W W PW", "W W W WWWWWW W W W W PW", "W W P  P P P W W W W PW", "WPWWWWWPWWWWWWWWWWWPW", "W P W P P W P W P P W P W", "W P P W P W P P W P W P W", "W P W P W P P W P W P P E W", "WWWWWWWWWWWWWWWWWWWWW", ], hunterMovementType: 'continuous', hunterPhasesThroughWalls: true, }
+];
+// --- END OF INLINED lib/levelData.ts ---
+
+// --- START OF INLINED lib/useGameKeyNavigation.ts ---
+console.log('[useGameKeyNavigation.ts inline] Loading...');
+const useGameKeyNavigation_InlinedComponent = ({ itemRefs, controls, enabled, layout = { numCols: 1, loop: true }, onFocusItem, initialFocusedIndex = 0, }) => {
+    const [focusedIndex, setFocusedIndex] = React.useState(null);
+    const internalControlsRef = React.useRef(controls);
+    const itemRefsRef_nav = React.useRef(itemRefs); 
+    React.useEffect(() => { internalControlsRef.current = controls; }, [controls]);
+    React.useEffect(() => {
+        itemRefsRef_nav.current = itemRefs;
+        if (enabled) {
+            if (itemRefs.length === 0) { setFocusedIndex(null); }
+            else {
+                const currentIndexIsValid = focusedIndex !== null && focusedIndex >= 0 && focusedIndex < itemRefs.length && itemRefs[focusedIndex]?.current;
+                if (!currentIndexIsValid) {
+                    let newFocusCandidate = initialFocusedIndex;
+                    if (newFocusCandidate < 0 || newFocusCandidate >= itemRefs.length || !itemRefs[newFocusCandidate]?.current) {
+                        const firstValidIndex = itemRefs.findIndex(ref => ref && ref.current);
+                        newFocusCandidate = firstValidIndex !== -1 ? firstValidIndex : 0;
+                    }
+                    if (itemRefs.length > 0 && (newFocusCandidate >= itemRefs.length || !itemRefs[newFocusCandidate]?.current)) {
+                        const firstTrulyValid = itemRefs.findIndex(ref => ref && ref.current);
+                        setFocusedIndex(firstTrulyValid !== -1 ? firstTrulyValid : null);
+                    }
+                    else if (itemRefs.length === 0) { setFocusedIndex(null); }
+                    else { setFocusedIndex(newFocusCandidate); }
+                }
+            }
+        }
+        else { setFocusedIndex(null); }
+    }, [enabled, itemRefs, initialFocusedIndex, focusedIndex]); 
+    React.useEffect(() => {
+        if (enabled && focusedIndex !== null && itemRefsRef_nav.current[focusedIndex]?.current) {
+            const currentElement = itemRefsRef_nav.current[focusedIndex].current;
+            currentElement.focus({ preventScroll: false });
+            itemRefsRef_nav.current.forEach((ref, idx) => {
+                if (ref && ref.current) { ref.current.tabIndex = (idx === focusedIndex) ? 0 : -1; }
+            });
+            if (onFocusItem) { onFocusItem(focusedIndex, currentElement); }
+        }
+        else if (enabled && focusedIndex === null) {
+            itemRefsRef_nav.current.forEach(ref => { if (ref && ref.current) { ref.current.tabIndex = -1; } });
+        }
+    }, [focusedIndex, enabled, onFocusItem]);
+    const getRuleForIndex_nav = (index, rules, defaultNumCols = 1, defaultLoop = true) => { 
+        if (rules) {
+            for (const rule of rules) {
+                if (index >= rule.startIndex && index < rule.startIndex + rule.numItems) {
+                    return { numCols: rule.numCols, loop: rule.loop !== undefined ? rule.loop : defaultLoop, rule };
+                }
+            }
+        }
+        return { numCols: defaultNumCols, loop: defaultLoop, rule: null };
+    };
+    const handleKeyDown_nav = React.useCallback((event) => { 
+        if (!enabled || focusedIndex === null || itemRefsRef_nav.current.length === 0) { return; }
+        const focusedElement = itemRefsRef_nav.current[focusedIndex]?.current;
+        if ((event.key === 'Enter' || event.key === ' ') && focusedElement) {
+            event.preventDefault();
+            focusedElement.click();
+            return;
+        }
+        const currentControls = internalControlsRef.current;
+        const totalItems = itemRefsRef_nav.current.length;
+        let nextIndex = focusedIndex;
+        const { numCols: defaultLayoutNumCols = 1, loop: defaultLayoutLoop = true, gridRules } = layout;
+        const currentItemRuleInfo = getRuleForIndex_nav(focusedIndex, gridRules, defaultLayoutNumCols, defaultLayoutLoop);
+        const currentNumCols = currentItemRuleInfo.numCols;
+        const currentLoop = currentItemRuleInfo.loop;
+        const currentRule = currentItemRuleInfo.rule;
+        const blockStartIndex = currentRule ? currentRule.startIndex : 0;
+        const blockEndIndex = currentRule ? currentRule.startIndex + currentRule.numItems - 1 : totalItems - 1;
+        const isActionKey = (keys, code) => keys.includes(code);
+        if (isActionKey(currentControls.up, event.code)) {
+            event.preventDefault();
+            nextIndex = focusedIndex - currentNumCols;
+            if (nextIndex < blockStartIndex || !itemRefsRef_nav.current[nextIndex]?.current) {
+                if (currentLoop) {
+                    let attemptIndex = (focusedIndex % currentNumCols) + blockEndIndex - (blockEndIndex % currentNumCols);
+                    if (attemptIndex > blockEndIndex || attemptIndex < blockStartIndex)
+                        attemptIndex = blockEndIndex - (blockEndIndex % currentNumCols) + (focusedIndex % currentNumCols);
+                    while (attemptIndex > blockEndIndex && attemptIndex >= blockStartIndex)
+                        attemptIndex -= currentNumCols;
+                    while (attemptIndex >= blockStartIndex && (!itemRefsRef_nav.current[attemptIndex]?.current || attemptIndex === focusedIndex)) {
+                        attemptIndex -= currentNumCols;
+                    }
+                    if (attemptIndex >= blockStartIndex && itemRefsRef_nav.current[attemptIndex]?.current)
+                        nextIndex = attemptIndex;
+                    else
+                        nextIndex = focusedIndex;
+                }
+                else { nextIndex = focusedIndex; }
+            }
+        }
+        else if (isActionKey(currentControls.down, event.code)) {
+            event.preventDefault();
+            nextIndex = focusedIndex + currentNumCols;
+            if (nextIndex > blockEndIndex || !itemRefsRef_nav.current[nextIndex]?.current) {
+                if (currentLoop) {
+                    let attemptIndex = (focusedIndex % currentNumCols) + blockStartIndex;
+                    while (attemptIndex <= blockEndIndex && (!itemRefsRef_nav.current[attemptIndex]?.current || attemptIndex === focusedIndex)) {
+                        attemptIndex += currentNumCols;
+                    }
+                    if (attemptIndex <= blockEndIndex && itemRefsRef_nav.current[attemptIndex]?.current)
+                        nextIndex = attemptIndex;
+                    else
+                        nextIndex = focusedIndex;
+                }
+                else { nextIndex = focusedIndex; }
+            }
+        }
+        else if (isActionKey(currentControls.left, event.code)) {
+            event.preventDefault();
+            if ((focusedIndex - 1 >= blockStartIndex) && (Math.floor((focusedIndex - 1) / currentNumCols) === Math.floor(focusedIndex / currentNumCols) || currentNumCols === 1 || (currentRule && focusedIndex === currentRule.startIndex)) && itemRefsRef_nav.current[focusedIndex - 1]?.current) {
+                nextIndex = focusedIndex - 1;
+            }
+            else if (currentLoop) {
+                nextIndex = Math.floor(focusedIndex / currentNumCols) * currentNumCols + (currentNumCols - 1);
+                if (currentRule)
+                    nextIndex = Math.min(nextIndex, blockEndIndex);
+                else
+                    nextIndex = Math.min(nextIndex, totalItems - 1);
+                while (nextIndex >= blockStartIndex && (!itemRefsRef_nav.current[nextIndex]?.current || nextIndex === focusedIndex)) {
+                    nextIndex--;
+                }
+                if (nextIndex < blockStartIndex || !itemRefsRef_nav.current[nextIndex]?.current)
+                    nextIndex = focusedIndex;
+            }
+            else { nextIndex = focusedIndex; }
+        }
+        else if (isActionKey(currentControls.right, event.code)) {
+            event.preventDefault();
+            if ((focusedIndex + 1 <= blockEndIndex) && (Math.floor((focusedIndex + 1) / currentNumCols) === Math.floor(focusedIndex / currentNumCols) || currentNumCols === 1 || (currentRule && focusedIndex === blockEndIndex)) && itemRefsRef_nav.current[focusedIndex + 1]?.current) {
+                nextIndex = focusedIndex + 1;
+            }
+            else if (currentLoop) {
+                nextIndex = Math.floor(focusedIndex / currentNumCols) * currentNumCols;
+                if (currentRule)
+                    nextIndex = Math.max(nextIndex, blockStartIndex);
+                else
+                    nextIndex = Math.max(nextIndex, 0);
+                while (nextIndex <= blockEndIndex && (!itemRefsRef_nav.current[nextIndex]?.current || nextIndex === focusedIndex)) {
+                    nextIndex++;
+                }
+                if (nextIndex > blockEndIndex || !itemRefsRef_nav.current[nextIndex]?.current)
+                    nextIndex = focusedIndex;
+            }
+            else { nextIndex = focusedIndex; }
+        }
+        if (nextIndex === focusedIndex && gridRules && gridRules.length > 1) {
+            let movedToOtherBlock = false;
+            if (isActionKey(currentControls.down, event.code)) {
+                const currentBlockIndex = gridRules.findIndex(r => focusedIndex >= r.startIndex && focusedIndex < r.startIndex + r.numItems);
+                if (currentBlockIndex !== -1 && currentBlockIndex + 1 < gridRules.length) {
+                    const nextBlockRule = gridRules[currentBlockIndex + 1];
+                    const currentRelativeCol = focusedIndex - gridRules[currentBlockIndex].startIndex;
+                    const targetColInNextBlock = currentRelativeCol % nextBlockRule.numCols;
+                    let potentialNewIndex = nextBlockRule.startIndex + targetColInNextBlock;
+                    if (potentialNewIndex >= nextBlockRule.startIndex + nextBlockRule.numItems)
+                        potentialNewIndex = nextBlockRule.startIndex + nextBlockRule.numItems - 1;
+                    if (itemRefsRef_nav.current[potentialNewIndex]?.current) {
+                        nextIndex = potentialNewIndex;
+                        movedToOtherBlock = true;
+                    }
+                    else if (itemRefsRef_nav.current[nextBlockRule.startIndex]?.current) {
+                        nextIndex = nextBlockRule.startIndex;
+                        movedToOtherBlock = true;
+                    }
+                }
+            }
+            else if (isActionKey(currentControls.up, event.code)) {
+                const currentBlockIndex = gridRules.findIndex(r => focusedIndex >= r.startIndex && focusedIndex < r.startIndex + r.numItems);
+                if (currentBlockIndex !== -1 && currentBlockIndex - 1 >= 0) {
+                    const prevBlockRule = gridRules[currentBlockIndex - 1];
+                    const currentRelativeCol = focusedIndex - gridRules[currentBlockIndex].startIndex;
+                    const targetColInPrevBlock = currentRelativeCol % prevBlockRule.numCols;
+                    let potentialNewIndex = prevBlockRule.startIndex + Math.floor((prevBlockRule.numItems - 1) / prevBlockRule.numCols) * prevBlockRule.numCols + targetColInPrevBlock;
+                    potentialNewIndex = Math.min(potentialNewIndex, prevBlockRule.startIndex + prevBlockRule.numItems - 1);
+                    if (itemRefsRef_nav.current[potentialNewIndex]?.current) {
+                        nextIndex = potentialNewIndex;
+                        movedToOtherBlock = true;
+                    }
+                    else if (itemRefsRef_nav.current[prevBlockRule.startIndex + prevBlockRule.numItems - 1]?.current) {
+                        nextIndex = prevBlockRule.startIndex + prevBlockRule.numItems - 1;
+                        movedToOtherBlock = true;
+                    }
+                    else if (itemRefsRef_nav.current[prevBlockRule.startIndex]?.current) {
+                        nextIndex = prevBlockRule.startIndex;
+                        movedToOtherBlock = true;
+                    }
+                }
+            }
+        }
+        if (nextIndex !== focusedIndex && itemRefsRef_nav.current[nextIndex]?.current) {
+            setFocusedIndex(nextIndex);
+        }
+        else if (nextIndex !== focusedIndex && !itemRefsRef_nav.current[nextIndex]?.current && focusedIndex !== null && itemRefsRef_nav.current[focusedIndex]?.current) {
+            setFocusedIndex(focusedIndex);
+        }
+    }, [enabled, focusedIndex, layout, itemRefsRef_nav, internalControlsRef]);
+    React.useEffect(() => {
+        if (enabled) { window.addEventListener('keydown', handleKeyDown_nav); }
+        else { window.removeEventListener('keydown', handleKeyDown_nav); }
+        return () => { window.removeEventListener('keydown', handleKeyDown_nav); };
+    }, [enabled, handleKeyDown_nav]);
+    return { focusedIndex };
+};
+// --- END OF INLINED lib/useGameKeyNavigation.ts ---
+
+// --- START OF INLINED components/Button.tsx ---
+console.log('[Button.tsx inline] Loading...');
+const Button_InlinedComponent = React.forwardRef(({ children, variant = 'primary', size = 'md', className = '', ...props }, ref) => {
+    const baseStyles = 'font-body font-semibold rounded-md shadow-lg transition-all duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:saturate-0';
+    let variantStyles = '';
+    const consistentFocusRing = 'focus:ring-fuchsia-500 focus:ring-offset-[#0A051E]';
+    switch (variant) {
+        case 'primary': variantStyles = THEME_COLORS.buttonPrimaryBg + ' ' + THEME_COLORS.buttonPrimaryHoverBg + ' text-white ' + consistentFocusRing; break;
+        case 'secondary': variantStyles = THEME_COLORS.buttonSecondaryBg + ' ' + THEME_COLORS.buttonSecondaryHoverBg + ' text-white ' + consistentFocusRing; break;
+        case 'ghost': variantStyles = 'bg-transparent ' + THEME_COLORS.buttonGhostText + ' ' + THEME_COLORS.buttonGhostHoverText + ' border-2 ' + THEME_COLORS.buttonGhostBorder + ' ' + THEME_COLORS.buttonGhostHoverBorder + ' ' + consistentFocusRing + ' shadow-none hover:shadow-md'; break;
+    }
+    let sizeStyles = '';
+    switch (size) {
+        case 'sm': sizeStyles = 'px-3 py-1.5 text-sm'; break;
+        case 'md': sizeStyles = 'px-5 py-2 text-base'; break;
+        case 'lg': sizeStyles = 'px-8 py-3 text-lg'; break;
+    }
+    return (React.createElement("button", { ref: ref, className: baseStyles + ' ' + variantStyles + ' ' + sizeStyles + ' ' + className, ...props }, children));
+});
+Button_InlinedComponent.displayName = 'Button';
+// --- END OF INLINED components/Button.tsx ---
+
+// --- START OF INLINED components/ModeCard.tsx ---
+console.log('[ModeCard.tsx inline] Loading...');
+const ModeCard_InlinedComponent = React.forwardRef(({ mode, onSelectMode, onSelectLevelMode, controls, setIsParentNavEnabled }, ref) => {
+  const smallButtonRef = React.useRef(null);
+  const mediumButtonRef = React.useRef(null);
+  const largeButtonRef = React.useRef(null);
+  const sizeButtonRefs = React.useMemo(() => 
+    [smallButtonRef, mediumButtonRef, largeButtonRef].filter(r => r !== null), 
+  []);
+  const [isCardNavActive, setIsCardNavActive] = React.useState(false);
+  useGameKeyNavigation_InlinedComponent({
+    itemRefs: sizeButtonRefs, controls, enabled: isCardNavActive,
+    layout: { numCols: 3, loop: true }, initialFocusedIndex: 0,
+  });
+  const displayModeName = mode; 
+  const handleSelectLevelClick = () => { playSound(SoundEffect.BUTTON_CLICK); onSelectLevelMode?.(); };
+  const handleSelectSizeMode = (sizeValue) => {
+    playSound(SoundEffect.BUTTON_CLICK_SECONDARY);
+    onSelectMode(mode, sizeValue);
+    setIsCardNavActive(false); setIsParentNavEnabled(true);
+    if (ref && 'current' in ref && ref.current) ref.current.focus();
+  };
+  const handleCardKeyDown = (event) => {
+    if (isCardNavActive) return;
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      if (mode === GameMode.LEVELS) handleSelectLevelClick();
+      else { setIsParentNavEnabled(false); setIsCardNavActive(true); }
+    }
+  };
+  React.useEffect(() => {
+    if (isCardNavActive) {
+      const handleEscapeAndTab = (event) => {
+        if (event.key === 'Escape') {
+           const cardElement = ref && 'current' in ref ? ref.current : null;
+           const isTargetRelevant = cardElement?.contains(event.target) || sizeButtonRefs.some(buttonRef => buttonRef.current === event.target);
+          if (isTargetRelevant) {
+            event.preventDefault(); event.stopPropagation(); setIsCardNavActive(false); setIsParentNavEnabled(true);
+            if (cardElement) cardElement.focus();
+          }
+        } else if (event.key === 'Tab') {
+          const activeElement = document.activeElement;
+          const isFocusStillOnSizeButton = sizeButtonRefs.some(buttonRef => buttonRef.current === activeElement);
+          if (!isFocusStillOnSizeButton) {
+             setTimeout(() => {
+                const newActiveElement = document.activeElement;
+                const isStillOnOurButtons = sizeButtonRefs.some(r => r.current === newActiveElement);
+                if (!isStillOnOurButtons) { setIsCardNavActive(false); setIsParentNavEnabled(true); }
+             }, 0);
+          }
+        }
+      };
+      window.addEventListener('keydown', handleEscapeAndTab, true); 
+      return () => window.removeEventListener('keydown', handleEscapeAndTab, true);
+    }
+  }, [isCardNavActive, setIsParentNavEnabled, ref, sizeButtonRefs]);
+  return (
+    React.createElement("div", { ref: ref, className: THEME_COLORS.panelBg + ' p-4 sm:p-6 rounded-lg shadow-xl ' + THEME_COLORS.panelBorder + ' border-2 flex flex-col items-center text-center transform hover:scale-105 transition-transform duration-200 hover:shadow-fuchsia-500/30 focus:outline-none focus:ring-2 focus:ring-fuchsia-500 focus:ring-offset-2 focus:ring-offset-[#0A051E] ' + THEME_COLORS.panelBorderAccent, tabIndex: -1, onKeyDown: handleCardKeyDown, role: "button", "aria-label": 'Select mode: ' + displayModeName },
+      React.createElement("img", { src: MODE_IMAGES[mode], alt: displayModeName, className: "w-full h-32 sm:h-40 object-contain rounded-md mb-4 border-2 border-indigo-700 bg-[#0F0A20]", onError: (e) => { const pathColor = THEME_COLORS.canvasPath.startsWith('bg-') ? THEME_COLORS.canvasPath.substring(3) : THEME_COLORS.canvasPath; e.currentTarget.style.backgroundColor = pathColor; }}),
+      React.createElement("h3", { className: 'font-display text-xl sm:text-2xl font-bold ' + THEME_COLORS.textAccent + ' mb-2' }, displayModeName),
+      React.createElement("p", { className: THEME_COLORS.textSecondary + ' font-body text-sm sm:text-base mb-4 h-16 sm:h-20 overflow-y-auto' }, MODE_DESCRIPTIONS[mode]),
+      mode === GameMode.LEVELS ? (
+        React.createElement(Button_InlinedComponent, { onClick: handleSelectLevelClick, className: "w-full mt-2", variant: "primary", tabIndex: 0 }, "Select Level")
+      ) : (
+        React.createElement("div", { className: "grid grid-cols-3 gap-2 w-full mt-2" },
+          GAME_SIZE_CONFIG.map((sizeConfig, idx) => (
+            React.createElement(Button_InlinedComponent, { key: mode + '-' + sizeConfig.name, ref: idx === 0 ? smallButtonRef : idx === 1 ? mediumButtonRef : largeButtonRef, variant: "secondary", size: "sm", onClick: () => handleSelectSizeMode(sizeConfig.value), className: "w-full", tabIndex: isCardNavActive ? 0 : -1 }, sizeConfig.name)
+          ))
+        )
+      )
+    )
+  );
+});
+ModeCard_InlinedComponent.displayName = 'ModeCard';
+// --- END OF INLINED components/ModeCard.tsx ---
+
+// --- START OF INLINED components/MazeCanvas.tsx ---
+console.log('[MazeCanvas.tsx inline] Loading...');
+const MazeCanvas_InlinedComponent = ({
+  maze,
+  player,
+  startPos,
+  endPos,
+  keyPos,
+  hunters,
+  gameMode,
+  cellSize,
+  canvasWidth,
+  canvasHeight,
+  selectedPlayerSkin,
+  currentLevelHunterMovementType,
+  currentLevelPhasesThroughWalls,
+}) => {
+  const canvasRef = React.useRef(null);
+  const currentSkin = selectedPlayerSkin;
+
+
+  React.useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    ctx.fillStyle = THEME_COLORS.canvasPath; 
+    ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+
+    let camX = 0;
+    let camY = 0;
+    const mazePixelWidth = maze[0].length * cellSize;
+    const mazePixelHeight = maze.length * cellSize;
+
+    if (gameMode === GameMode.DARKNESS || mazePixelWidth > canvasWidth || mazePixelHeight > canvasHeight) {
+        camX = player.x * cellSize - canvasWidth / 2 + cellSize / 2;
+        camY = player.y * cellSize - canvasHeight / 2 + cellSize / 2;
+        camX = Math.max(0, Math.min(camX, mazePixelWidth - canvasWidth));
+        camY = Math.max(0, Math.min(camY, mazePixelHeight - canvasHeight));
+    } else { 
+        camX = (mazePixelWidth - canvasWidth) / 2; 
+        camY = (mazePixelHeight - canvasHeight) / 2;
+         ctx.translate(-camX, -camY); 
+         camX = 0; 
+         camY = 0;
+    }
+    
+    if (!(mazePixelWidth <= canvasWidth && mazePixelHeight <= canvasHeight) || gameMode === GameMode.DARKNESS) {
+       ctx.save();
+       ctx.translate(-camX, -camY);
+    }
+
+    const visStartCol = Math.floor(camX / cellSize);
+    const visEndCol = visStartCol + Math.ceil(canvasWidth / cellSize) + 1; 
+    const visStartRow = Math.floor(camY / cellSize);
+    const visEndRow = visStartRow + Math.ceil(canvasHeight / cellSize) + 1;
+
+    ctx.fillStyle = THEME_COLORS.canvasWall;
+    for (let y = Math.max(0, visStartRow); y < Math.min(maze.length, visEndRow); y++) {
+      for (let x = Math.max(0, visStartCol); x < Math.min(maze[0].length, visEndCol); x++) {
+        if (maze[y] && maze[y][x] && maze[y][x].isWall) {
+          ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
+          ctx.strokeStyle = 'rgba(120, 120, 180, 0.05)'; 
+          ctx.strokeRect(x * cellSize + 1, y * cellSize + 1, cellSize - 2, cellSize - 2);
+        }
+      }
+    }
+    
+    ctx.fillStyle = `${THEME_COLORS.canvasStart}99`; 
+    ctx.beginPath();
+    ctx.arc(startPos.x * cellSize + cellSize / 2, startPos.y * cellSize + cellSize / 2, cellSize * 0.22, 0, Math.PI * 2); 
+    ctx.fill();
+    
+    const portalX = endPos.x * cellSize;
+    const portalY = endPos.y * cellSize;
+    const portalWidth = cellSize;
+    const portalHeight = cellSize;
+    const cornerRadius = cellSize * 0.15;
+
+    const adjustHexColorBrightness = (hex, amount) => {
+        let r = parseInt(hex.slice(1, 3), 16);
+        let g = parseInt(hex.slice(3, 5), 16);
+        let b = parseInt(hex.slice(5, 7), 16);
+        r = Math.min(255, Math.max(0, r + amount));
+        g = Math.min(255, Math.max(0, g + amount));
+        b = Math.min(255, Math.max(0, b + amount));
+        return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+    };
+
+    const pulseFactor = Math.sin(Date.now() / 250) * 25 + 20; 
+    const pulsatingEndColor = adjustHexColorBrightness(THEME_COLORS.canvasEnd, Math.floor(pulseFactor));
+
+    ctx.fillStyle = pulsatingEndColor;
+    ctx.beginPath();
+    const innerPadding = cellSize * 0.1; 
+    if (ctx.roundRect) { 
+         ctx.roundRect(portalX + innerPadding, portalY + innerPadding, portalWidth - innerPadding * 2, portalHeight - innerPadding * 2, cornerRadius);
+    } else { 
+        const xRect = portalX + innerPadding;
+        const yRect = portalY + innerPadding;
+        const wRect = portalWidth - innerPadding * 2;
+        const hRect = portalHeight - innerPadding * 2;
+        ctx.beginPath();
+        ctx.moveTo(xRect + cornerRadius, yRect);
+        ctx.lineTo(xRect + wRect - cornerRadius, yRect);
+        ctx.quadraticCurveTo(xRect + wRect, yRect, xRect + wRect, yRect + cornerRadius);
+        ctx.lineTo(xRect + wRect, yRect + hRect - cornerRadius);
+        ctx.quadraticCurveTo(xRect + wRect, yRect + hRect, xRect + wRect - cornerRadius, yRect + hRect);
+        ctx.lineTo(xRect + cornerRadius, yRect + hRect);
+        ctx.quadraticCurveTo(xRect, yRect + hRect, xRect, yRect + hRect - cornerRadius);
+        ctx.lineTo(xRect, yRect + cornerRadius);
+        ctx.quadraticCurveTo(xRect, yRect, xRect + cornerRadius, yRect);
+        ctx.closePath();
+    }
+    ctx.fill();
+    ctx.strokeStyle = adjustHexColorBrightness(THEME_COLORS.canvasEnd, 50); 
+    ctx.lineWidth = Math.max(1, cellSize * 0.04);
+    ctx.stroke();
+
+
+    if (keyPos && !player.hasKey && maze[keyPos.y]?.[keyPos.x]?.isKey) {
+      ctx.save();
+      ctx.translate(keyPos.x * cellSize + cellSize / 2, keyPos.y * cellSize + cellSize / 2);
+      ctx.rotate(Date.now() / 800); 
+      ctx.fillStyle = THEME_COLORS.canvasKey; 
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+      ctx.lineWidth = cellSize * 0.04;
+
+      const bowRadius = cellSize * 0.18;
+      const shankLength = cellSize * 0.35;
+      const shankWidth = cellSize * 0.08;
+      const bitHeight = cellSize * 0.12;
+      const bitWidth = cellSize * 0.08;
+
+      ctx.beginPath();
+      ctx.arc(0, -shankLength * 0.6, bowRadius, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+      
+      ctx.fillRect(-shankWidth / 2, -shankLength * 0.2, shankWidth, shankLength);
+      ctx.strokeRect(-shankWidth / 2, -shankLength * 0.2, shankWidth, shankLength);
+
+      ctx.fillRect(shankWidth / 2, shankLength * 0.4, bitWidth, bitHeight);
+      ctx.strokeRect(shankWidth / 2, shankLength * 0.4, bitWidth, bitHeight);
+      
+      ctx.fillStyle = 'rgba(255,255,255,0.4)';
+      ctx.beginPath();
+      ctx.arc(0, -shankLength * 0.6, bowRadius * 0.5, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.restore();
+    }
+    
+    if (currentSkin.trailStyle === PlayerTrailStyle.DOTS) {
+        player.trail.forEach((segment) => {
+          const trailSizeFactor = 0.1 + 0.4 * segment.opacity; 
+          ctx.fillStyle = `rgba(${currentSkin.trailColorBase}, ${segment.opacity * 0.5})`; 
+          ctx.beginPath();
+          ctx.arc(
+            segment.x * cellSize + cellSize / 2,
+            segment.y * cellSize + cellSize / 2,
+            (cellSize / 2.5) * trailSizeFactor, 0, 2 * Math.PI 
+          );
+          ctx.fill();
+        });
+    } else if (currentSkin.trailStyle === PlayerTrailStyle.LINE) {
+        if (player.trail.length > 0) {
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            for (let i = 0; i < player.trail.length; i++) {
+                const segment = player.trail[i];
+                const nextSegment = player.trail[i+1]; 
+
+                const startX = segment.x * cellSize + cellSize / 2;
+                const startY = segment.y * cellSize + cellSize / 2;
+                
+                let endX, endY;
+                if (i === player.trail.length - 1) { 
+                    endX = player.x * cellSize + cellSize / 2;
+                    endY = player.y * cellSize + cellSize / 2;
+                } else if (nextSegment) {
+                    endX = nextSegment.x * cellSize + cellSize / 2;
+                    endY = nextSegment.y * cellSize + cellSize /2;
+                } else { 
+                    endX = startX;
+                    endY = startY;
+                }
+                
+                if (startX === endX && startY === endY && i < player.trail.length -1) continue;
+
+                ctx.strokeStyle = `rgba(${currentSkin.trailColorBase}, ${segment.opacity * 0.6})`;
+                const lineWidth = Math.max(1, (cellSize / 5) * (0.2 + 0.8 * segment.opacity));
+                ctx.lineWidth = lineWidth;
+                
+                ctx.beginPath();
+                ctx.moveTo(startX, startY);
+                if (gameMode === GameMode.DASH && i === player.trail.length -1) {
+                     ctx.lineTo(player.x * cellSize + cellSize / 2, player.y * cellSize + cellSize / 2);
+                } else {
+                     ctx.lineTo(endX, endY);
+                }
+                ctx.stroke();
+            }
+        }
+    }
+
+    const playerCenterX = player.x * cellSize + cellSize / 2;
+    const playerCenterY = player.y * cellSize + cellSize / 2;
+
+    const auraGradient = ctx.createRadialGradient(playerCenterX, playerCenterY, cellSize * 0.1, playerCenterX, playerCenterY, cellSize * 0.45);
+    auraGradient.addColorStop(0, `rgba(${currentSkin.trailColorBase}, 0.6)`);
+    auraGradient.addColorStop(1, `rgba(${currentSkin.trailColorBase}, 0)`);
+    ctx.fillStyle = auraGradient;
+    ctx.beginPath();
+    ctx.arc(playerCenterX, playerCenterY, cellSize * 0.45, 0, 2 * Math.PI); 
+    ctx.fill();
+
+    ctx.fillStyle = currentSkin.playerColor;
+    const coreRadius = cellSize * 0.3;
+    ctx.beginPath();
+
+    switch (currentSkin.coreShape) {
+      case PlayerCoreShape.CIRCLE:
+        ctx.arc(playerCenterX, playerCenterY, coreRadius, 0, 2 * Math.PI);
+        break;
+      case PlayerCoreShape.SQUARE:
+        ctx.rect(playerCenterX - coreRadius, playerCenterY - coreRadius, coreRadius * 2, coreRadius * 2);
+        break;
+      case PlayerCoreShape.TRIANGLE:
+        ctx.moveTo(playerCenterX, playerCenterY - coreRadius); 
+        ctx.lineTo(playerCenterX + coreRadius * Math.cos(Math.PI / 6), playerCenterY + coreRadius * Math.sin(Math.PI / 6)); 
+        ctx.lineTo(playerCenterX - coreRadius * Math.cos(Math.PI / 6), playerCenterY + coreRadius * Math.sin(Math.PI / 6)); 
+        break;
+      case PlayerCoreShape.DIAMOND:
+        ctx.moveTo(playerCenterX, playerCenterY - coreRadius); 
+        ctx.lineTo(playerCenterX + coreRadius * 0.75, playerCenterY); 
+        ctx.lineTo(playerCenterX, playerCenterY + coreRadius); 
+        ctx.lineTo(playerCenterX - coreRadius * 0.75, playerCenterY); 
+        break;
+      case PlayerCoreShape.HEXAGON:
+      default: 
+        ctx.moveTo(playerCenterX + coreRadius, playerCenterY);
+        for (let i = 1; i <= 6; i++) {
+            ctx.lineTo(
+                playerCenterX + coreRadius * Math.cos(i * 2 * Math.PI / 6),
+                playerCenterY + coreRadius * Math.sin(i * 2 * Math.PI / 6)
+            );
+        }
+        break;
+    }
+    ctx.closePath();
+    ctx.fill();
+
+    ctx.fillStyle = 'rgba(255,255,255,0.5)';
+    ctx.beginPath();
+    ctx.arc(playerCenterX - cellSize*0.08, playerCenterY - cellSize*0.08, cellSize * 0.1, 0, 2 * Math.PI);
+    ctx.fill();
+
+    if (hunters) {
+      hunters.forEach(hunter => {
+        const hunterDrawX = currentLevelHunterMovementType === 'continuous' ? hunter.pixelX : (hunter.x * cellSize + cellSize / 2);
+        const hunterDrawY = currentLevelHunterMovementType === 'continuous' ? hunter.pixelY : (hunter.y * cellSize + cellSize / 2);
+        
+        ctx.save();
+        ctx.translate(hunterDrawX, hunterDrawY);
+        
+        const hSize = cellSize * 0.38; 
+        const eyePulse = Math.sin(Date.now() / 150) * 0.05 + 0.1;
+
+        if (currentLevelHunterMovementType === 'continuous' && currentLevelPhasesThroughWalls) {
+          const currentGlobalAlpha = 0.55 + Math.sin(Date.now() / 300) * 0.25; 
+          ctx.globalAlpha = currentGlobalAlpha;
+          
+          const echoOffsets = [{x: cellSize * 0.05, y: -cellSize * 0.05}, {x: -cellSize * 0.05, y: cellSize * 0.05}];
+          echoOffsets.forEach(offset => {
+            ctx.save();
+            ctx.translate(offset.x, offset.y);
+            ctx.rotate(Math.sin(Date.now() / 500 + offset.x) * 0.1); 
+            ctx.fillStyle = `rgba(255, 120, 120, ${0.25 * ctx.globalAlpha})`; 
+            ctx.beginPath();
+            ctx.moveTo(0, -hSize * 1.1); 
+            ctx.lineTo(hSize * 0.9, hSize * 0.6); 
+            ctx.lineTo(-hSize * 0.9, hSize * 0.6); 
+            ctx.closePath();
+            ctx.fill();
+            ctx.restore();
+          });
+
+          ctx.fillStyle = `rgba(239, 68, 68, ${0.85 * ctx.globalAlpha})`; 
+          ctx.beginPath();
+          ctx.moveTo(0, -hSize); 
+          ctx.lineTo(hSize, hSize * 0.5); 
+          ctx.lineTo(-hSize, hSize * 0.5); 
+          ctx.closePath();
+          ctx.fill();
+
+          const coreDotRadius = cellSize * 0.1;
+          ctx.fillStyle = `rgba(255, 100, 100, ${0.9 * ctx.globalAlpha})`; 
+          ctx.beginPath();
+          ctx.arc(0, -hSize * 0.05, coreDotRadius, 0, Math.PI * 2); 
+          ctx.fill();
+
+          const eyeGradient = ctx.createRadialGradient(0, -hSize*0.1, cellSize * eyePulse * 0.5, 0, -hSize*0.1, cellSize * eyePulse * 1.5);
+          eyeGradient.addColorStop(0, 'rgba(255, 255, 255, 0.9)');
+          eyeGradient.addColorStop(0.5, 'rgba(255, 220, 220, 0.7)'); 
+          eyeGradient.addColorStop(1, 'rgba(255, 150, 150, 0.4)'); 
+          ctx.fillStyle = eyeGradient;
+          ctx.beginPath();
+          ctx.arc(0, -hSize * 0.1, cellSize * eyePulse * 1.3, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.globalAlpha = 1.0; 
+
+        } else {
+          ctx.fillStyle = THEME_COLORS.canvasHunter;
+          ctx.beginPath();
+          ctx.moveTo(0, -hSize); 
+          ctx.lineTo(hSize, hSize * 0.5); 
+          ctx.lineTo(-hSize, hSize * 0.5); 
+          ctx.closePath();
+          ctx.fill();
+          
+          ctx.fillStyle = 'rgba(255, 220, 220, 0.9)';
+          ctx.beginPath();
+          ctx.arc(0, -hSize * 0.1, cellSize * eyePulse, 0, Math.PI * 2);
+          ctx.fill();
+
+          if (currentLevelHunterMovementType === 'continuous') { 
+            const auraGrad = ctx.createRadialGradient(0,0, hSize * 0.5, 0,0, hSize * 1.5);
+            auraGrad.addColorStop(0, 'rgba(239, 68, 68, 0.2)');
+            auraGrad.addColorStop(1, 'rgba(239, 68, 68, 0)');
+            ctx.fillStyle = auraGrad;
+            ctx.beginPath();
+            ctx.arc(0,0, hSize * 1.5, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        }
+        ctx.restore();
+      });
+    }
+
+    if (!(mazePixelWidth <= canvasWidth && mazePixelHeight <= canvasHeight) || gameMode === GameMode.DARKNESS) {
+       ctx.restore(); 
+    }
+
+    if (gameMode === GameMode.DARKNESS) {
+      let playerScreenX = player.x * cellSize + cellSize / 2;
+      let playerScreenY = player.y * cellSize + cellSize / 2;
+
+      if (!(mazePixelWidth <= canvasWidth && mazePixelHeight <= canvasHeight)) { 
+          playerScreenX -= camX;
+          playerScreenY -= camY;
+      } else { 
+          playerScreenX += (canvasWidth - mazePixelWidth)/2;
+          playerScreenY += (canvasHeight - mazePixelHeight)/2;
+      }
+      
+      const gradient = ctx.createRadialGradient(
+        playerScreenX, playerScreenY, cellSize * 1.5, 
+        playerScreenX, playerScreenY, cellSize * 4.0  
+      );
+      gradient.addColorStop(0, THEME_COLORS.canvasDarknessGradientStart);
+      gradient.addColorStop(1, THEME_COLORS.canvasDarknessGradientEnd);
+      
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+    }
+
+  }, [
+      maze, player, startPos, endPos, keyPos, hunters, gameMode, cellSize, 
+      canvasWidth, canvasHeight, currentSkin, 
+      currentLevelHunterMovementType, currentLevelPhasesThroughWalls
+  ]);
+
+  return React.createElement("canvas", { ref: canvasRef, width: canvasWidth, height: canvasHeight, className: `rounded-lg shadow-2xl border-2 ${THEME_COLORS.panelBorder} ${THEME_COLORS.panelBg}` });
+};
+MazeCanvas_InlinedComponent.displayName = 'MazeCanvas';
+// --- END OF INLINED components/MazeCanvas.tsx ---
+
+// --- START OF INLINED components/GameScreen.tsx ---
+console.log('[GameScreen.tsx inline] Loading...');
+const GameScreen_InlinedComponent = ({
+  mode,
+  sizeOrLevelId,
+  controls,
+  highscores,
+  levelProgress,
+  activePlayerSkin,
+  onSetScreen,
+  onGameWin,
+  onSaveLevelProgress,
+}) => {
+  const [maze, setMaze] = React.useState([]);
+  const [player, setPlayer] = React.useState({ x: 1, y: 1, trail: [], hasKey: false });
+  const [startPos, setStartPos] = React.useState({ x: 1, y: 1 });
+  const [endPos, setEndPos] = React.useState({ x: 1, y: 1 });
+  const [keyPos, setKeyPos] = React.useState(undefined);
+  const [currentLevel, setCurrentLevel] = React.useState(null);
+  const [hunters, setHunters] = React.useState([]); 
+  const [gameOver, setGameOver] = React.useState(false);
+  const [gameWon, setGameWon] = React.useState(false);
+  const [gameOverReason, setGameOverReason] = React.useState('');
+
+  const [timer, setTimer] = React.useState(0);
+  const [timerActive, setTimerActive] = React.useState(false);
+  const timerIntervalRef = React.useRef(null);
+  const gameStartTimeRef = React.useRef(0);
+  const gameLogicIntervalRef = React.useRef(null);
+  const winDelayTimeoutRef = React.useRef(null);
+
+  const [remainingTime, setRemainingTime] = React.useState(null);
+  const countdownIntervalRef = React.useRef(null);
+  const [isTimeTrialLow, setIsTimeTrialLow] = React.useState(false);
+
+  const [canvasSize, setCanvasSize] = React.useState({ width: 500, height: 400 });
+  const [actualCellSize, setActualCellSize] = React.useState(20);
+  const gameContainerRef = React.useRef(null);
+
+  const [showMirroredControlsHint, setShowMirroredControlsHint] = React.useState(false);
+  const [mirroredControlsHintShownThisAttempt, setMirroredControlsHintShownThisAttempt] = React.useState(false);
+  const hintTimeoutRef = React.useRef(null);
+  const [wrongMirroredMoveAttempts, setWrongMirroredMoveAttempts] = React.useState(0);
+
+  const mazeDimensions = currentLevel ? {width: currentLevel.width, height: currentLevel.height} : {width: sizeOrLevelId, height: sizeOrLevelId};
+  
+  const getBestTime = () => {
+    if (mode === GameMode.LEVELS && currentLevel) {
+        return levelProgress[currentLevel.id]?.bestTime;
+    }
+    const currentHighscore = highscores
+      .filter(hs => hs.mode === mode && hs.size === sizeOrLevelId)
+      .sort((a, b) => a.time - b.time)[0];
+    return currentHighscore?.time;
+  };
+  
+  const handleGameOver = React.useCallback((reason) => {
+    if (gameOver || gameWon) return;
+    setGameOver(true);
+    setTimerActive(false); 
+    if (countdownIntervalRef.current) clearInterval(countdownIntervalRef.current);
+    if (gameLogicIntervalRef.current) clearInterval(gameLogicIntervalRef.current);
+    if (winDelayTimeoutRef.current) clearTimeout(winDelayTimeoutRef.current);
+    setGameOverReason(reason);
+    if (reason === "Time's Up!") {
+        playSound(SoundEffect.TIME_UP);
+    } else {
+        playSound(SoundEffect.GAME_LOSE);
+    }
+  }, [gameOver, gameWon]);
+
+  const checkTileBasedGameOver = React.useCallback((currentPlayerPos, currentHuntersPos) => {
+    if (gameOver || gameWon) return false;
+    
+    if (currentLevel?.timeLimit !== undefined && remainingTime !== null && remainingTime <= 0) {
+        handleGameOver("Time's Up!");
+        return true;
+    }
+
+    if (currentLevel?.hunterMovementType !== 'continuous') {
+        for (const hunter of currentHuntersPos) { 
+          if (currentPlayerPos.x === hunter.x && currentPlayerPos.y === hunter.y) {
+            handleGameOver("Caught by Sentinel!");
+            return true;
+          }
+        }
+    }
+    return false;
+  }, [currentLevel, remainingTime, handleGameOver, gameOver, gameWon]); 
+
+  const initializeGame = React.useCallback(() => {
+    let newMaze;
+    let newStart;
+    let newEnd;
+    let newKeyPos;
+    let newPlayerHasKey = false;
+    let newPlayerPos;
+    let levelDataForInit = null;
+    let initialHunterGridPositions = [];
+
+    setGameOver(false);
+    setGameWon(false);
+    setGameOverReason('');
+    setTimer(0);
+    setTimerActive(false);
+    setIsTimeTrialLow(false);
+    setShowMirroredControlsHint(false); 
+    setMirroredControlsHintShownThisAttempt(false);
+    setWrongMirroredMoveAttempts(0);
+    if (hintTimeoutRef.current) clearTimeout(hintTimeoutRef.current);
+    if (winDelayTimeoutRef.current) clearTimeout(winDelayTimeoutRef.current);
+
+    if (mode === GameMode.LEVELS) {
+      const foundLevelData = LEVELS_DATA.find(l => l.id === sizeOrLevelId);
+      if (!foundLevelData) {
+        onSetScreen(Screen.LEVEL_SELECT); 
+        return;
+      }
+      levelDataForInit = foundLevelData;
+      setCurrentLevel(levelDataForInit); 
+      const parsed = parseLevel(levelDataForInit);
+      newMaze = parsed.grid;
+      newStart = parsed.start;
+      newEnd = parsed.end;
+      newKeyPos = parsed.keyPos;
+      newPlayerPos = { ...newStart };
+      initialHunterGridPositions = parsed.hunterStartPositions || [];
+      if (!newKeyPos) newPlayerHasKey = true; 
+      setRemainingTime(levelDataForInit.timeLimit ?? null);
+    } else {
+      setCurrentLevel(null);
+      const generated = generateMaze(sizeOrLevelId, sizeOrLevelId, mode); 
+      newMaze = generated.grid;
+      newStart = generated.start;
+      newEnd = generated.end;
+      newPlayerPos = { ...newStart };
+      newPlayerHasKey = true; 
+      initialHunterGridPositions = [];
+      setRemainingTime(null);
+    }
+
+    setMaze(newMaze);
+    setStartPos(newStart);
+    setEndPos(newEnd);
+    setKeyPos(newKeyPos);
+    setPlayer({ x: newPlayerPos.x, y: newPlayerPos.y, trail: [], hasKey: newPlayerHasKey });
+    
+    const newHunters = initialHunterGridPositions.map(pos => ({
+        ...pos,
+        pixelX: pos.x * actualCellSize + actualCellSize / 2,
+        pixelY: pos.y * actualCellSize + actualCellSize / 2,
+    }));
+    setHunters(newHunters);
+    
+    if (timerIntervalRef.current) clearInterval(timerIntervalRef.current);
+    if (countdownIntervalRef.current) clearInterval(countdownIntervalRef.current);
+    if (gameLogicIntervalRef.current) clearInterval(gameLogicIntervalRef.current);
+    
+    if (gameContainerRef.current) {
+        gameContainerRef.current.focus({ preventScroll: true });
+    }
+    
+    playSound(SoundEffect.LEVEL_START);
+  }, [mode, sizeOrLevelId, onSetScreen, actualCellSize]); 
+  
+  const handleRestartGame = React.useCallback(() => {
+    playSound(SoundEffect.BUTTON_CLICK);
+    if (actualCellSize > 0) initializeGame(); 
+  }, [actualCellSize, initializeGame]);
+
+  React.useEffect(() => {
+    if (actualCellSize > 0) {
+        initializeGame();
+    }
+  }, [initializeGame, actualCellSize]); 
+
+  React.useEffect(() => {
+    if (timerActive && !gameOver && !gameWon) {
+      gameStartTimeRef.current = Date.now() - timer * 1000;
+      const intervalId = window.setInterval(() => {
+        if (typeof gameStartTimeRef.current === 'number') {
+          setTimer((Date.now() - gameStartTimeRef.current) / 1000);
+        }
+      }, 50); 
+      timerIntervalRef.current = intervalId;
+      return () => { clearInterval(intervalId); timerIntervalRef.current = null; };
+    } else {
+      if (timerIntervalRef.current !== null) {
+        clearInterval(timerIntervalRef.current);
+        timerIntervalRef.current = null;
+      }
+    }
+  }, [timerActive, gameOver, gameWon, timer]);
+
+  React.useEffect(() => {
+    if (timerActive && currentLevel?.timeLimit !== undefined && remainingTime !== null && remainingTime > 0 && !gameOver && !gameWon) {
+      const intervalId = window.setInterval(() => {
+        setRemainingTime(prev => {
+          if (prev === null || prev <= 0) {
+            clearInterval(intervalId);
+            if (!gameOver && !gameWon) checkTileBasedGameOver(player, hunters);
+            return 0;
+          }
+          const newRemaining = prev - 0.1; 
+          if (newRemaining < TIME_TRIAL_LOW_THRESHOLD && !isTimeTrialLow) {
+            setIsTimeTrialLow(true);
+            playSound(SoundEffect.TIME_TICK_LOW, 0.5);
+          } else if (newRemaining >= TIME_TRIAL_LOW_THRESHOLD && isTimeTrialLow) {
+            setIsTimeTrialLow(false);
+          }
+          return newRemaining < 0 ? 0 : newRemaining;
+        });
+      }, 100);
+      countdownIntervalRef.current = intervalId;
+      return () => { clearInterval(intervalId); countdownIntervalRef.current = null; };
+    } else {
+        if (countdownIntervalRef.current !== null) {
+            clearInterval(countdownIntervalRef.current);
+            countdownIntervalRef.current = null;
+        }
+        if (currentLevel?.timeLimit !== undefined && remainingTime !== null && remainingTime <= 0 && !gameOver && !gameWon) {
+             checkTileBasedGameOver(player, hunters);
+        }
+    }
+  }, [timerActive, currentLevel, remainingTime, gameOver, gameWon, checkTileBasedGameOver, player, hunters, isTimeTrialLow]);
+
+  React.useEffect(() => {
+    if (player.trail.length === 0 && !(timerActive && player.trail.some(t => t.opacity > 0))) {
+      return;
+    }
+    const intervalId = setInterval(() => {
+      setPlayer(prevPlayer => {
+        if (prevPlayer.trail.length === 0 && !prevPlayer.trail.some(t => t.opacity > 0)) {
+          clearInterval(intervalId); 
+          return prevPlayer;
+        }
+        const newTrail = prevPlayer.trail
+          .map(segment => ({ ...segment, opacity: Math.max(0, segment.opacity - TRAIL_FADE_RATE)}))
+          .filter(segment => segment.opacity > 0.01); 
+        if (newTrail.length === 0 && prevPlayer.trail.length > 0 && !newTrail.some(t => t.opacity > 0.01)) {
+             clearInterval(intervalId);
+        }
+        return { ...prevPlayer, trail: newTrail };
+      });
+    }, TRAIL_UPDATE_INTERVAL);
+    return () => clearInterval(intervalId);
+  }, [player.trail, timerActive]);
+
+  const updateCanvasDimensions = React.useCallback(() => {
+    if (gameContainerRef.current && mazeDimensions.width > 0 && mazeDimensions.height > 0) {
+        const containerWidth = gameContainerRef.current.offsetWidth;
+        const availableHeight = Math.max(300, window.innerHeight * 0.65); 
+        const cellW = Math.floor(containerWidth / mazeDimensions.width);
+        const cellH = Math.floor(availableHeight / mazeDimensions.height);
+        const newCellSize = Math.max(10, Math.min(cellW, cellH, 40)); 
+        setActualCellSize(newCellSize); 
+        setCanvasSize({
+            width: mazeDimensions.width * newCellSize,
+            height: mazeDimensions.height * newCellSize,
+        });
+    }
+  }, [mazeDimensions.width, mazeDimensions.height]);
+
+  React.useEffect(() => {
+    updateCanvasDimensions(); 
+    const DebouncedUpdate = () => {
+        let timeoutId;
+        return () => {
+            clearTimeout(timeoutId);
+            timeoutId = window.setTimeout(updateCanvasDimensions, 150);
+        }
+    };
+    const debouncedHandler = DebouncedUpdate();
+    window.addEventListener('resize', debouncedHandler);
+    return () => window.removeEventListener('resize', debouncedHandler);
+  }, [updateCanvasDimensions]);
+
+  const handleWin = React.useCallback(() => {
+    if (gameOver || gameWon) return; 
+
+    if (currentLevel?.timeLimit !== undefined && remainingTime !== null && remainingTime <= 0) {
+      handleGameOver("Time's Up!");
+      return;
+    }
+
+    setGameWon(true);
+    setTimerActive(false); 
+    if (countdownIntervalRef.current) clearInterval(countdownIntervalRef.current);
+    if (gameLogicIntervalRef.current) clearInterval(gameLogicIntervalRef.current);
+    if (winDelayTimeoutRef.current) clearTimeout(winDelayTimeoutRef.current);
+    
+    const finalTime = (Date.now() - gameStartTimeRef.current) / 1000;
+    playSound(SoundEffect.GAME_WIN);
+
+    if (mode === GameMode.LEVELS && currentLevel) {
+        onSaveLevelProgress(currentLevel.id, finalTime, currentLevel);
+    }
+    onGameWin(finalTime, mode, mode === GameMode.LEVELS && currentLevel ? currentLevel.id : sizeOrLevelId, currentLevel || undefined);
+  }, [
+    mode, currentLevel, sizeOrLevelId, onGameWin, onSaveLevelProgress, 
+    gameOver, gameWon, gameStartTimeRef, remainingTime, handleGameOver
+  ]);
+  
+  const moveTileBasedHunters = React.useCallback((playerPos) => {
+    if (!maze.length || gameOver || gameWon || currentLevel?.hunterMovementType === 'continuous') return;
+
+    setHunters(prevHunters => {
+        const newHuntersPos = prevHunters.map(hunter => {
+            const possibleMoves = [];
+            const directions = [{dx:0, dy:-1}, {dx:0, dy:1}, {dx:-1, dy:0}, {dx:1, dy:0}];
+
+            for (const dir of directions) {
+                const nextX = hunter.x + dir.dx;
+                const nextY = hunter.y + dir.dy;
+                if (maze[nextY]?.[nextX]?.isPath) {
+                    const dist = Math.sqrt(Math.pow(playerPos.x - nextX, 2) + Math.pow(playerPos.y - nextY, 2));
+                    possibleMoves.push({pos: {x: nextX, y: nextY}, dist});
+                }
+            }
+            if (possibleMoves.length > 0) {
+                possibleMoves.sort((a,b) => a.dist - b.dist); 
+                return {...hunter, x: possibleMoves[0].pos.x, y: possibleMoves[0].pos.y};
+            }
+            return hunter; 
+        });
+        if (checkTileBasedGameOver(playerPos, newHuntersPos)) return prevHunters; 
+        return newHuntersPos;
+    });
+  }, [maze, gameOver, gameWon, checkTileBasedGameOver, currentLevel]);
+
+  const movePlayer = React.useCallback((dx, dy) => {
+    if (!maze.length || gameOver || gameWon) return;
+    
+    let localCurrentX = player.x;
+    let localCurrentY = player.y;
+    let movedSuccessfully = false;
+    
+    const previousPlayerPos = { x: player.x, y: player.y };
+
+    const effectiveGameMode = currentLevel?.isDashLevel ? GameMode.DASH : mode;
+    
+    if (effectiveGameMode === GameMode.DASH) {
+        const initialPlayerX = player.x;
+        const initialPlayerY = player.y;
+        while (true) {
+            const nextX = localCurrentX + dx;
+            const nextY = localCurrentY + dy;
+            if (maze[nextY]?.[nextX]?.isPath) {
+                localCurrentX = nextX;
+                localCurrentY = nextY;
+                movedSuccessfully = true;
+                if (keyPos && localCurrentX === keyPos.x && localCurrentY === keyPos.y && !player.hasKey) break; 
+                if (localCurrentX === endPos.x && localCurrentY === endPos.y && player.hasKey) break; 
+            } else {
+                break;
+            }
+        }
+         if (movedSuccessfully) { 
+            const newTrailSegments = [];
+            let trailX = initialPlayerX;
+            let trailY = initialPlayerY;
+            while(trailX !== localCurrentX || trailY !== localCurrentY) {
+                newTrailSegments.push({ x: trailX, y: trailY, opacity: TRAIL_OPACITY_INIT });
+                if (trailX !== localCurrentX) trailX += dx;
+                if (trailY !== localCurrentY) trailY += dy;
+            }
+             setPlayer(prev => ({ 
+                ...prev,
+                trail: [...prev.trail, ...newTrailSegments].slice(-PLAYER_TRAIL_LENGTH * 2.5) 
+            }));
+        }
+    } else { 
+        const nextX = player.x + dx;
+        const nextY = player.y + dy;
+        if (maze[nextY]?.[nextX]?.isPath) {
+            localCurrentX = nextX;
+            localCurrentY = nextY;
+            movedSuccessfully = true;
+        }
+    }
+
+    if (movedSuccessfully) {
+        if (effectiveGameMode === GameMode.DASH) {
+            playSound(SoundEffect.PLAYER_DASH, 0.5);
+        } else {
+            playSound(SoundEffect.PLAYER_MOVE, 0.3);
+        }
+
+        let newPlayerHasKey = player.hasKey;
+        if (keyPos && localCurrentX === keyPos.x && localCurrentY === keyPos.y && !player.hasKey) {
+            newPlayerHasKey = true;
+            playSound(SoundEffect.KEY_COLLECT);
+            if (maze[keyPos.y]?.[keyPos.x]) { 
+                 const newMazeData = maze.map((row, rIdx) => rIdx === keyPos.y ? row.map((cell, cIdx) => cIdx === keyPos.x ? {...cell, isKey: false} : cell) : row);
+                 setMaze(newMazeData);
+            }
+        }
+        
+        const newPlayerPos = { x: localCurrentX, y: localCurrentY };
+
+        setPlayer(prevPlayer => {
+            let newTrail = prevPlayer.trail;
+            if (effectiveGameMode !== GameMode.DASH && (previousPlayerPos.x !== newPlayerPos.x || previousPlayerPos.y !== newPlayerPos.y)) {
+                 newTrail = [
+                    ...prevPlayer.trail,
+                    { x: previousPlayerPos.x, y: previousPlayerPos.y, opacity: TRAIL_OPACITY_INIT }
+                ].slice(-PLAYER_TRAIL_LENGTH);
+            }
+            return { ...newPlayerPos, trail: newTrail, hasKey: newPlayerHasKey };
+        });
+
+        if (checkTileBasedGameOver(newPlayerPos, hunters)) return; 
+
+        if (newPlayerPos.x === endPos.x && newPlayerPos.y === endPos.y && newPlayerHasKey) {
+            handleWin();
+        } else if (hunters.length > 0 && currentLevel?.hunterMovementType !== 'continuous') {
+            moveTileBasedHunters(newPlayerPos); 
+        }
+    } else { 
+         if (!gameOver && !gameWon) {
+            playSound(SoundEffect.WALL_BUMP, 0.4);
+        }
+    }
+  }, [
+    maze, player, endPos, keyPos, mode, handleWin, gameOver, gameWon, hunters, moveTileBasedHunters, 
+    checkTileBasedGameOver, currentLevel, setMaze, setPlayer
+  ]);
+
+  const handleKeyDown = React.useCallback((event) => {
+    if (event.key === 'Enter') {
+      if ((gameOver || gameWon) && document.activeElement && document.activeElement.tagName === 'BUTTON') {
+        return; 
+      }
+      event.preventDefault();
+      handleRestartGame();
+      return;
+    }
+    
+    if (document.activeElement && ['INPUT', 'TEXTAREA', 'BUTTON', 'SELECT'].includes(document.activeElement.tagName)) {
+        return;
+    }
+    
+    if (showMirroredControlsHint && currentLevel?.controlScheme === 'mirrored') {
+        const intendedDx = controls.left.includes(event.code) ? -1 : controls.right.includes(event.code) ? 1 : 0;
+        const intendedDy = controls.up.includes(event.code) ? -1 : controls.down.includes(event.code) ? 1 : 0;
+        const finalDx = currentLevel.controlScheme === 'mirrored' ? intendedDx * -1 : intendedDx;
+        const finalDy = currentLevel.controlScheme === 'mirrored' ? intendedDy * -1 : intendedDy;
+
+        if ((finalDx === -1 && finalDy === 0) || (finalDx === 0 && finalDy === -1)) { 
+            setShowMirroredControlsHint(false);
+            if (hintTimeoutRef.current) clearTimeout(hintTimeoutRef.current);
+            setWrongMirroredMoveAttempts(0);
+        }
+    }
+
+    if (!maze.length || gameOver || gameWon) return; 
+
+    let intendedDx = 0; 
+    let intendedDy = 0; 
+
+    if (controls.up.includes(event.code)) intendedDy = -1;
+    else if (controls.down.includes(event.code)) intendedDy = 1;
+    else if (controls.left.includes(event.code)) intendedDx = -1;
+    else if (controls.right.includes(event.code)) intendedDx = 1;
+
+    let finalDx = intendedDx;
+    let finalDy = intendedDy;
+
+    if (currentLevel?.controlScheme === 'mirrored') {
+       if (!mirroredControlsHintShownThisAttempt && (intendedDx !== 0 || intendedDy !== 0)) {
+            if ((intendedDx === 1 && intendedDy === 0) || (intendedDx === 0 && intendedDy === 1)) { 
+                const nextWrongAttempts = wrongMirroredMoveAttempts + 1;
+                setWrongMirroredMoveAttempts(nextWrongAttempts);
+                if (nextWrongAttempts >= 2) {
+                    setShowMirroredControlsHint(true);
+                    setMirroredControlsHintShownThisAttempt(true); 
+                    if (hintTimeoutRef.current) clearTimeout(hintTimeoutRef.current);
+                    hintTimeoutRef.current = window.setTimeout(() => {
+                        setShowMirroredControlsHint(false);
+                    }, 2000);
+                }
+            } else { 
+                setWrongMirroredMoveAttempts(0); 
+            }
+        }
+        finalDx = intendedDx * -1;
+        finalDy = intendedDy * -1;
+    }
+
+    if (finalDx !== 0 || finalDy !== 0) {
+      event.preventDefault();
+      if (!timerActive) { 
+        setTimerActive(true);
+      }
+      movePlayer(finalDx, finalDy);
+    }
+  }, [
+    controls, movePlayer, timerActive, gameOver, gameWon, maze, setTimerActive, currentLevel,
+    mirroredControlsHintShownThisAttempt, showMirroredControlsHint, wrongMirroredMoveAttempts, handleRestartGame
+  ]);
+
+  React.useEffect(() => {
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      if (hintTimeoutRef.current) clearTimeout(hintTimeoutRef.current);
+      if (winDelayTimeoutRef.current) clearTimeout(winDelayTimeoutRef.current);
+    };
+  }, [handleKeyDown]);
+
+  const isPointInWall = React.useCallback((px, py, mazeGrid, cs) => {
+    const gx = Math.floor(px / cs);
+    const gy = Math.floor(py / cs);
+    return mazeGrid[gy]?.[gx]?.isWall || false;
+  }, []);
+
+  const updateSingleContinuousHunter = React.useCallback((
+    hunter, 
+    playerPixelX, 
+    playerPixelY, 
+    mazeGrid, 
+    cs, 
+    deltaTime,
+    phasesThroughWalls 
+  ) => {
+    const speed = HUNTER_CONTINUOUS_SPEED_PX_PER_SEC;
+    const moveDistance = speed * deltaTime;
+    const hunterRadius = HUNTER_RADIUS_FACTOR * cs;
+
+    const dxToPlayer = playerPixelX - hunter.pixelX;
+    const dyToPlayer = playerPixelY - hunter.pixelY;
+    const distToPlayer = Math.sqrt(dxToPlayer * dxToPlayer + dyToPlayer * dyToPlayer);
+
+    if (distToPlayer < 1) return hunter; 
+
+    let moveX = (dxToPlayer / distToPlayer) * moveDistance;
+    let moveY = (dyToPlayer / distToPlayer) * moveDistance;
+
+    let nextPixelX = hunter.pixelX + moveX;
+    let nextPixelY = hunter.pixelY + moveY;
+
+    const checkCollisionAtPoint = (targetX, targetY) => {
+      const halfSize = hunterRadius * 0.7; 
+      const pointsToCheck = [ 
+        { x: targetX - halfSize, y: targetY - halfSize }, { x: targetX + halfSize, y: targetY - halfSize },
+        { x: targetX - halfSize, y: targetY + halfSize }, { x: targetX + halfSize, y: targetY + halfSize },
+        { x: targetX, y: targetY } 
+      ];
+      for (const p of pointsToCheck) {
+        if (isPointInWall(p.x, p.y, mazeGrid, cs)) return true;
+      }
+      return false;
+    };
+    
+    const collidedWithWall = !phasesThroughWalls && checkCollisionAtPoint(nextPixelX, nextPixelY);
+
+    if (!collidedWithWall) { 
+        hunter.pixelX = nextPixelX;
+        hunter.pixelY = nextPixelY;
+    } else { 
+        const canMoveXOnly = !checkCollisionAtPoint(hunter.pixelX + moveX, hunter.pixelY);
+        if (canMoveXOnly) {
+            hunter.pixelX += moveX;
+        }
+        const canMoveYOnly = !checkCollisionAtPoint(hunter.pixelX, hunter.pixelY + moveY);
+        if (canMoveYOnly) {
+            hunter.pixelY += moveY;
+        }
+    }
+    
+    hunter.pixelX = Math.max(hunterRadius, Math.min(mazeGrid[0].length * cs - hunterRadius, hunter.pixelX));
+    hunter.pixelY = Math.max(hunterRadius, Math.min(mazeGrid.length * cs - hunterRadius, hunter.pixelY));
+
+    hunter.x = Math.floor(hunter.pixelX / cs);
+    hunter.y = Math.floor(hunter.pixelY / cs);
+
+    return hunter;
+  }, [isPointInWall]);
+
+  React.useEffect(() => {
+    if (!timerActive || gameOver || gameWon || actualCellSize === 0) {
+      if (gameLogicIntervalRef.current) clearInterval(gameLogicIntervalRef.current);
+      return;
+    }
+
+    const intervalTime = 1000 / GAME_LOGIC_FPS;
+
+    gameLogicIntervalRef.current = window.setInterval(() => {
+      const currentLevelData = currentLevel; 
+
+      if (mode === GameMode.LEVELS && currentLevelData?.hunterMovementType === 'continuous' && hunters.length > 0 && maze.length > 0) {
+        
+        const playerPixelX = player.x * actualCellSize + actualCellSize / 2;
+        const playerPixelY = player.y * actualCellSize + actualCellSize / 2;
+        
+        setHunters(prevHunters => 
+          prevHunters.map(h => 
+            updateSingleContinuousHunter(
+                {...h}, 
+                playerPixelX, 
+                playerPixelY, 
+                maze, 
+                actualCellSize, 
+                intervalTime / 1000,
+                currentLevelData.hunterPhasesThroughWalls || false 
+            )
+          )
+        );
+      }
+    }, intervalTime);
+
+    return () => {
+      if (gameLogicIntervalRef.current) clearInterval(gameLogicIntervalRef.current);
+    };
+  }, [
+    timerActive, gameOver, gameWon, player.x, player.y, maze, actualCellSize, 
+    hunters, mode, currentLevel, updateSingleContinuousHunter 
+  ]);
+
+  React.useEffect(() => {
+    if (gameOver || gameWon || !currentLevel || currentLevel.hunterMovementType !== 'continuous' || hunters.length === 0 || actualCellSize === 0) {
+        return;
+    }
+
+    const playerPixelX = player.x * actualCellSize + actualCellSize / 2;
+    const playerPixelY = player.y * actualCellSize + actualCellSize / 2;
+    const playerRadius = PLAYER_RADIUS_FACTOR * actualCellSize;
+    const hunterPhysicalRadius = HUNTER_RADIUS_FACTOR * actualCellSize; 
+
+    for (const hunter of hunters) {
+        const dx = playerPixelX - hunter.pixelX;
+        const dy = playerPixelY - hunter.pixelY;
+        const distanceSquared = dx * dx + dy * dy;
+        const collisionDistance = playerRadius + hunterPhysicalRadius;
+        if (distanceSquared < collisionDistance * collisionDistance) {
+            handleGameOver("Caught by Sentinel!");
+            break; 
+        }
+    }
+  }, [hunters, player.x, player.y, actualCellSize, gameOver, gameWon, currentLevel, handleGameOver]);
+
+  const formattedTime = timer.toFixed(2);
+  const bestTimeValue = getBestTime();
+  
+  const displayModeName = mode === GameMode.LEVELS && currentLevel 
+    ? `Level ${currentLevel.id}: ${currentLevel.name}`
+    : `${mode}${mode !== GameMode.LEVELS ? ` (Grid ${sizeOrLevelId}x${sizeOrLevelId})` : ''}`;
+
+  const handleReturnToMenu = () => {
+    playSound(SoundEffect.BUTTON_CLICK_SECONDARY);
+    onSetScreen(Screen.MENU);
+  };
+  
+  const isTimeTrial = currentLevel?.timeLimit !== undefined;
+  const effectiveGameModeForCanvas = currentLevel?.isDarknessLevel ? GameMode.DARKNESS : (currentLevel?.isDashLevel ? GameMode.DASH : mode);
+
+  return (
+    React.createElement("div", { className: `min-h-screen ${THEME_COLORS.background} flex flex-col items-center justify-center p-2 sm:p-4 font-body relative`},
+      React.createElement("div", { className: `w-full max-w-5xl ${THEME_COLORS.panelBg} ${THEME_COLORS.panelBorderAccent} border-2 rounded-lg shadow-2xl p-3 sm:p-6`},
+        React.createElement("div", { className: "flex flex-col sm:flex-row justify-between items-center mb-4 gap-2 sm:gap-4 px-1 sm:px-2"},
+          React.createElement("div", { className: `${THEME_COLORS.textAccent} text-lg sm:text-xl font-display font-bold truncate max-w-[200px] sm:max-w-xs md:max-w-sm`, title: displayModeName }, displayModeName),
+          React.createElement("div", { className: "flex flex-col sm:flex-row items-center gap-x-4"},
+            isTimeTrial && remainingTime !== null && (
+              React.createElement("div", { className: `${remainingTime <= TIME_TRIAL_LOW_THRESHOLD ? THEME_COLORS.textDanger : THEME_COLORS.textPrimary} text-lg sm:text-xl font-semibold animate-pulse`}, `Time Left: ${remainingTime.toFixed(1)}s`)
+            ),
+            React.createElement("div", { className: `${THEME_COLORS.textPrimary} text-lg sm:text-xl font-semibold`}, `Time: ${formattedTime}s`)
+          ),
+          React.createElement("div", { className: `${THEME_COLORS.textSecondary} text-base sm:text-lg`}, `Best: ${bestTimeValue ? `${bestTimeValue.toFixed(2)}s` : 'N/A'}`)
+        ),
+        gameOver && (
+            React.createElement("div", { className: `text-center mb-3 text-2xl font-bold ${THEME_COLORS.textDanger} animate-pulse`}, `GAME OVER! ${gameOverReason}`)
+        ),
+        !gameOver && keyPos && !player.hasKey && (
+          React.createElement("div", { className: `text-center mb-2 ${THEME_COLORS.textAccent} font-semibold animate-pulse`}, "Find the Key!")
+        ),
+        !gameOver && player.hasKey && keyPos && !gameWon && (
+             React.createElement("div", { className: "text-center mb-2 text-lime-400 font-semibold"}, "Key Acquired! Find the Exit!")
+        ),
+        React.createElement("div", { ref: gameContainerRef, tabIndex: -1, className: "w-full flex justify-center items-center mb-4 min-h-[200px] sm:min-h-[300px] md:min-h-[400px] relative outline-none"},
+          maze.length > 0 && canvasSize.width > 0 && canvasSize.height > 0 && actualCellSize > 0 && (
+            React.createElement(MazeCanvas_InlinedComponent, {
+              maze: maze, player: player, startPos: startPos, endPos: endPos, keyPos: keyPos, hunters: hunters, 
+              gameMode: effectiveGameModeForCanvas, cellSize: actualCellSize, canvasWidth: canvasSize.width, canvasHeight: canvasSize.height,
+              selectedPlayerSkin: activePlayerSkin,
+              currentLevelHunterMovementType: currentLevel?.hunterMovementType,
+              currentLevelPhasesThroughWalls: currentLevel?.hunterPhasesThroughWalls
+            })
+          ),
+           showMirroredControlsHint && currentLevel?.controlScheme === 'mirrored' && (
+            React.createElement("div", { className: "absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-fuchsia-700 bg-opacity-90 text-white p-4 rounded-lg shadow-xl z-50 text-center border-2 border-fuchsia-400"},
+              React.createElement("h3", { className: "font-display text-lg mb-1"}, "Control Anomaly!"),
+              React.createElement("p", { className: "text-sm"}, "Signal inverted: Left is Right, Up is Down.")
+            )
+          )
+        ),
+        React.createElement("div", { className: "flex flex-col sm:flex-row gap-3 justify-center"},
+            React.createElement(Button_InlinedComponent, { onClick: handleReturnToMenu, variant: "ghost", tabIndex: 0 }, "Return to Menu"),
+            React.createElement(Button_InlinedComponent, { onClick: handleRestartGame, variant: "secondary", tabIndex: 0 }, mode === GameMode.LEVELS ? "Restart Level" : "Restart Game")
+        )
+      )
+    )
+  );
+};
+GameScreen_InlinedComponent.displayName = 'GameScreen';
+// --- END OF INLINED components/GameScreen.tsx ---
+
+// --- START OF INLINED components/SkinCustomizationScreen.tsx ---
+console.log('[SkinCustomizationScreen.tsx inline] Loading...');
+const SkinCustomizationScreen_InlinedComponent = ({
+  onSetScreen,
+  unlockedAuraPaletteIds,
+  unlockedCoreMatrixIds,
+  unlockedTrailSignatureIds,
+  currentAssembly,
+  onSaveSelectedAssembly,
+  controls,
+}) => {
+  const [editingAssembly, setEditingAssembly] = React.useState(currentAssembly);
+
+  const SkinShapePreview_Internal = ({ skin, size = 80, containerClasses = "" }) => {
+    const SvgShape_Internal = ({ color, coreShape }) => {
+      const half = size / 2;
+      const radius = size * 0.35;
+      switch (coreShape) {
+        case PlayerCoreShape.CIRCLE: return React.createElement("circle", { cx:half, cy:half, r:radius, fill:color });
+        case PlayerCoreShape.SQUARE: return React.createElement("rect", { x:half - radius, y:half - radius, width:radius * 2, height:radius * 2, fill:color });
+        case PlayerCoreShape.TRIANGLE: return React.createElement("polygon", { points:`${half},${half - radius} ${half + radius * Math.cos(Math.PI / 6)},${half + radius * Math.sin(Math.PI / 6)} ${half - radius * Math.cos(Math.PI / 6)},${half + radius * Math.sin(Math.PI / 6)}`, fill:color });
+        case PlayerCoreShape.DIAMOND: return React.createElement("polygon", { points:`${half},${half - radius} ${half + radius * 0.85},${half} ${half},${half + radius} ${half - radius * 0.85},${half}`, fill:color });
+        case PlayerCoreShape.HEXAGON: default: let points = ""; for (let i = 0; i < 6; i++) { points += `${half + radius * Math.cos(i * Math.PI / 3)},${half + radius * Math.sin(i * Math.PI / 3)} `; } return React.createElement("polygon", { points:points.trim(), fill:color });
+      }
+    };
+    const bgStyle = skin.previewBg.startsWith('bg-') ? skin.previewBg : undefined;
+    const inlineBgStyle = !bgStyle ? { background: skin.previewBg } : {};
+    return React.createElement("div", { className: `flex items-center justify-center w-full h-full rounded-md ${bgStyle || ''} ${containerClasses}`, style:{...inlineBgStyle, boxShadow: `0 0 15px ${skin.playerColor}, inset 0 0 10px rgba(0,0,0,0.3)`} },
+        React.createElement("svg", { width:size, height:size, viewBox:`0 0 ${size} ${size}`, style:{ filter: `drop-shadow(0 0 8px ${skin.playerColor})` } },
+            React.createElement(SvgShape_Internal, { color: skin.playerColor, coreShape: skin.coreShape })
+        )
+    );
+  };
+
+  const livePreviewSkin = React.useMemo(() => {
+    const palette = AURA_PALETTES.find(p => p.id === editingAssembly.paletteId) || AURA_PALETTES[0];
+    const coreShapeItem = CORE_MATRIX_ITEMS.find(c => c.id === editingAssembly.coreShapeId) || CORE_MATRIX_ITEMS[0];
+    const trailStyleItem = TRAIL_SIGNATURE_ITEMS.find(t => t.id === editingAssembly.trailStyleId) || TRAIL_SIGNATURE_ITEMS[0];
+    return {
+      id: CUSTOM_SKIN_ID, name: 'Assembled Signature', playerColor: palette.playerColor, trailColorBase: palette.trailColorBase,
+      coreShape: coreShapeItem.id, trailStyle: trailStyleItem.id,
+      previewBg: `radial-gradient(ellipse at center, ${palette.playerColor}2A 0%, ${THEME_COLORS.inputBg.replace('bg-','')} 80%)`,
+    };
+  }, [editingAssembly]);
+
+  const returnButtonRef = React.useRef(null);
+  const equipAssembledButtonRef = React.useRef(null);
+  const auraPaletteItemsRef = React.useRef(null);
+  const coreMatrixItemsRef = React.useRef(null);
+  const trailSignatureItemsRef = React.useRef(null);
+
+  const focusableItems = React.useMemo(() => [
+    returnButtonRef, auraPaletteItemsRef, coreMatrixItemsRef, trailSignatureItemsRef, equipAssembledButtonRef,
+  ].filter(ref => ref && ref.current !== null),
+  [returnButtonRef, equipAssembledButtonRef, auraPaletteItemsRef, coreMatrixItemsRef, trailSignatureItemsRef ]);
+
+  useGameKeyNavigation_InlinedComponent({ itemRefs: focusableItems, controls, enabled: true, layout: { numCols: 1, loop: true }, initialFocusedIndex: 0 });
+
+  const handleComponentSelect = (category, value) => {
+    playSound(SoundEffect.SKIN_SELECT, 0.3);
+    setEditingAssembly(prev => ({ ...prev, [category]: value }));
+  };
+  const handleEquipAssembled = () => { onSaveSelectedAssembly(editingAssembly); };
+  const handleReturnToMenu = () => { onSetScreen(Screen.MENU); };
+  
+  const getUnlockSourceName = (itemType, itemId) => {
+    const level = LEVELS_DATA.find(l => 
+        (itemType === 'aura_palette' && l.unlocksAuraPaletteId === itemId) ||
+        (itemType === 'core_matrix' && l.unlocksCoreMatrixId === itemId) ||
+        (itemType === 'trail_signature' && l.unlocksTrailSignatureId === itemId)
+    );
+    return level ? `Lv ${level.id}: ${level.name}` : null;
+  };
+
+  const renderComponentGallery = (title, items, unlockedIds, selectedComponentId, onSelect, categoryKey, itemPreviewRenderer, galleryRef) => {
+    return (
+      React.createElement("div", { className: "mb-6", ref: galleryRef },
+        React.createElement("h4", { className: `font-display text-xl ${THEME_COLORS.textPrimary} mb-3` }, title),
+        React.createElement("div", { className: "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3" },
+          items.map((item, idx) => {
+            const isUnlocked = unlockedIds.includes(item.id);
+            const isSelected = selectedComponentId === item.id;
+            const unlockSourceText = item.unlockDescription || getUnlockSourceName(categoryKey.replace('Id', ''), item.id);
+            const finalUnlockText = !isUnlocked && unlockSourceText ? unlockSourceText : null;
+            return (
+              React.createElement(Button_InlinedComponent, {
+                key: item.id.toString(), onClick: () => isUnlocked && onSelect(item.id), disabled: !isUnlocked,
+                className: `${THEME_COLORS.panelBg} p-2.5 rounded-md shadow-md border ${isSelected && isUnlocked ? `${THEME_COLORS.panelBorderAccent} border-2 ring-2 ring-fuchsia-500 shadow-fuchsia-500/30` : THEME_COLORS.panelBorder} ${isUnlocked ? 'cursor-pointer hover:border-fuchsia-400 transform hover:scale-105' : 'opacity-60 saturate-50 cursor-default'} transition-all duration-150 focus:outline-none focus:ring-1 focus:ring-fuchsia-400 focus:ring-offset-1 focus:ring-offset-[#0A051E]`,
+                "aria-label": `${item.name}${isSelected ? ' (Selected)' : ''}${!isUnlocked ? ` (Locked - ${finalUnlockText || 'Unlock through gameplay'})` : ''}`,
+                tabIndex: 0 
+              },
+                itemPreviewRenderer(item, isSelected, isUnlocked),
+                React.createElement("p", { className: `text-xs font-medium truncate mt-1.5 ${isSelected && isUnlocked ? THEME_COLORS.textAccent : THEME_COLORS.textSecondary}` }, item.name),
+                finalUnlockText && React.createElement("p", { className: "text-[10px] text-indigo-400 leading-tight mt-0.5" }, finalUnlockText)
+              )
+            );
+          })
+        )
+      )
+    );
+  };
+
+  return (
+    React.createElement("div", { className: `min-h-screen ${THEME_COLORS.background} flex flex-col items-center p-4 sm:p-6 font-body` },
+      React.createElement("div", { className: "w-full max-w-6xl" },
+        React.createElement("div", { className: "relative flex items-center justify-center mb-6 sm:mb-8" },
+            React.createElement("div", { className: "absolute left-0 top-1/2 -translate-y-1/2" },
+                 React.createElement(Button_InlinedComponent, { ref: returnButtonRef, onClick: handleReturnToMenu, variant: "ghost", size: "md" }, "\u2190 Menu")
+            ),
+            React.createElement("h2", { className: `font-display text-3xl sm:text-4xl font-bold ${THEME_COLORS.textAccent} text-center` }, "Kryst Assembler")
+        ),
+        React.createElement("div", { className: `grid grid-cols-1 lg:grid-cols-3 gap-6 ${THEME_COLORS.panelBg} p-4 sm:p-6 rounded-lg shadow-xl ${THEME_COLORS.panelBorder} border-2 mb-8` },
+          React.createElement("div", { className: "lg:col-span-1 flex flex-col items-center justify-start py-4" },
+            React.createElement("h3", { className: `font-display text-2xl ${THEME_COLORS.textAccent} mb-4 text-center` }, "Assembled Signature"),
+            React.createElement("div", { className: `w-48 h-48 sm:w-56 sm:h-56 rounded-lg shadow-xl border-2 ${THEME_COLORS.panelBorderAccent} overflow-hidden` },
+                React.createElement(SkinShapePreview_Internal, { skin: livePreviewSkin, size: 220 })
+            ),
+            React.createElement(Button_InlinedComponent, { ref: equipAssembledButtonRef, onClick: handleEquipAssembled, variant: "primary", size: "lg", className: "mt-6 w-full max-w-xs" }, "Equip Assembled")
+          ),
+          React.createElement("div", { className: "lg:col-span-2 space-y-5" },
+            renderComponentGallery("Aura Palettes", AURA_PALETTES, unlockedAuraPaletteIds, editingAssembly.paletteId, (id) => handleComponentSelect('paletteId', id), 'paletteId',
+              (item, isSelected, isUnlocked) => ( React.createElement("div", { className: "h-10 w-full rounded-sm flex items-center justify-center", style:item.previewSwatchStyle || {backgroundColor: item.playerColor}})),
+              auraPaletteItemsRef
+            ),
+            renderComponentGallery("Core Matrices", CORE_MATRIX_ITEMS, unlockedCoreMatrixIds, editingAssembly.coreShapeId, (id) => handleComponentSelect('coreShapeId', id), 'coreShapeId',
+              (item, isSelected, isUnlocked) => ( React.createElement("div", { className: "h-10 w-full flex items-center justify-center" }, React.createElement(SkinShapePreview_Internal, { skin:{...livePreviewSkin, coreShape: item.id, playerColor: isSelected || isUnlocked ? livePreviewSkin.playerColor : '#555', previewBg: 'transparent'}, size:32, containerClasses:"bg-transparent shadow-none" }))),
+              coreMatrixItemsRef
+            ),
+            renderComponentGallery("Trail Signatures", TRAIL_SIGNATURE_ITEMS, unlockedTrailSignatureIds, editingAssembly.trailStyleId, (id) => handleComponentSelect('trailStyleId', id), 'trailStyleId',
+              (item, isSelected, isUnlocked) => ( React.createElement("div", { className: "h-10 w-full flex items-center justify-center text-center" }, React.createElement("span", { className: `text-sm font-semibold ${isSelected && isUnlocked ? THEME_COLORS.textAccent : (isUnlocked ? THEME_COLORS.textPrimary : 'text-gray-500')}`}, item.id === PlayerTrailStyle.DOTS ? "\u25CF \u25CF \u25CF" : "\u2501\u2501\u2501"))),
+              trailSignatureItemsRef
+            )
+          )
+        )
+      )
+    )
+  );
+};
+SkinCustomizationScreen_InlinedComponent.displayName = 'SkinCustomizationScreen';
+// --- END OF INLINED components/SkinCustomizationScreen.tsx ---
+
+// --- START OF INLINED components/WinScreen.tsx ---
+console.log('[WinScreen.tsx inline] Loading...');
+const WinScreen_InlinedComponent = ({ 
+    time, 
+    mode, 
+    sizeOrLevelId, 
+    isNewHighscore, 
+    bestTime, 
+    newlyUnlockedItem,
+    maxUnlockedLevel,
+    onSetScreen, 
+    onReplay,
+    onStartLevel,
+    controls,
+}) => {
+  const isLevelsMode = mode === GameMode.LEVELS;
+  const currentLevelId = isLevelsMode ? sizeOrLevelId : -1;
+  const currentLevelData = isLevelsMode ? LEVELS_DATA.find(l => l.id === currentLevelId) : null;
+  const nextLevelId = currentLevelId + 1;
+  const canPlayNextLevel = isLevelsMode && nextLevelId <= LEVELS_DATA.length && nextLevelId <= maxUnlockedLevel;
+  
+  const gameModeDisplayName = mode === GameMode.LEVELS && currentLevelData 
+    ? `Level ${currentLevelData.id}: ${currentLevelData.name}`
+    : `${mode}${mode !== GameMode.LEVELS ? ` (Grid ${sizeOrLevelId}x${sizeOrLevelId})` : ''}`;
+
+  const replayButtonRef = React.useRef(null);
+  const nextLevelButtonRef = React.useRef(null);
+  const levelSelectButtonRef = React.useRef(null); 
+  const returnMenuButtonRef = React.useRef(null);
+
+  const focusableItems = React.useMemo(() => {
+    const potentialItems = [];
+    if (isLevelsMode) {
+      if (canPlayNextLevel) potentialItems.push(nextLevelButtonRef);
+      potentialItems.push(levelSelectButtonRef); 
+      potentialItems.push(replayButtonRef);
+    } else {
+      potentialItems.push(replayButtonRef);
+    }
+    potentialItems.push(returnMenuButtonRef);
+    return potentialItems.filter(ref => ref !== null);
+  }, [isLevelsMode, canPlayNextLevel, nextLevelButtonRef, levelSelectButtonRef, replayButtonRef, returnMenuButtonRef]);
+  
+  const initialFocusedIndex = React.useMemo(() => {
+    if (!focusableItems.length) return 0;
+    if (isLevelsMode) {
+      if (canPlayNextLevel && focusableItems.includes(nextLevelButtonRef)) { return focusableItems.indexOf(nextLevelButtonRef); }
+      if (focusableItems.includes(levelSelectButtonRef)) { return focusableItems.indexOf(levelSelectButtonRef); }
+      if (focusableItems.includes(replayButtonRef)) { return focusableItems.indexOf(replayButtonRef); }
+    } else { 
+      if (focusableItems.includes(replayButtonRef)) { return focusableItems.indexOf(replayButtonRef); }
+    }
+    return 0; 
+  }, [isLevelsMode, canPlayNextLevel, focusableItems, nextLevelButtonRef, levelSelectButtonRef, replayButtonRef]);
+
+  useGameKeyNavigation_InlinedComponent({ itemRefs: focusableItems, controls, enabled: true, layout: { numCols: 1, loop: true }, initialFocusedIndex: initialFocusedIndex });
+
+  const handleReplayClick = React.useCallback(() => { onReplay(); }, [onReplay]);
+  const handleNextLevelClick = () => { onStartLevel(nextLevelId); };
+  const handleLevelSelectClick = () => { onSetScreen(Screen.LEVEL_SELECT); };
+  const handleReturnMenuClick = () => { onSetScreen(Screen.MENU); };
+
+  return (
+    React.createElement("div", { className: `min-h-screen ${THEME_COLORS.background} flex flex-col items-center justify-center p-4 text-center font-body` },
+      React.createElement("div", { className: `${THEME_COLORS.panelBg} ${THEME_COLORS.panelBorderAccent} border-2 p-6 sm:p-10 rounded-lg shadow-2xl w-full max-w-md` },
+        React.createElement("h1", { className: `font-display text-5xl font-bold mb-4 ${THEME_COLORS.textAccent}` }, isLevelsMode ? "Level Complete!" : "You Win!"),
+        React.createElement("h2", { className: `text-3xl ${THEME_COLORS.textPrimary} font-semibold mb-2` }, `Time: ${time.toFixed(2)}s`),
+        isNewHighscore ? ( React.createElement("p", { className: "text-2xl text-lime-400 font-bold mb-1 animate-pulse" }, "New Best Time!") ) 
+                       : ( bestTime && React.createElement("p", { className: `${THEME_COLORS.textSecondary} text-xl mb-1` }, `Best Time: ${bestTime.toFixed(2)}s`) ),
+        newlyUnlockedItem && (
+            React.createElement("p", { className: `text-xl ${THEME_COLORS.textPrimary} font-semibold my-4 p-3 bg-indigo-800 rounded-md shadow-inner` },
+                "Unlocked: ", React.createElement("span", {className: `${THEME_COLORS.textAccent}`}, newlyUnlockedItem.name, "!"),
+                React.createElement("span", { className: "block text-sm opacity-80"}, `(${newlyUnlockedItem.type.replace('_', ' ')})`)
+            )
+        ),
+        React.createElement("p", { className: `${THEME_COLORS.textSecondary} mb-8 text-sm` }, `${gameModeDisplayName} Complete`),
+        React.createElement("div", { className: "flex flex-col gap-3" },
+          isLevelsMode && canPlayNextLevel && ( React.createElement(Button_InlinedComponent, { ref: nextLevelButtonRef, onClick: handleNextLevelClick, variant: "primary", size: "lg" }, "Next Level") ),
+          isLevelsMode && ( React.createElement(Button_InlinedComponent, { ref: levelSelectButtonRef, onClick: handleLevelSelectClick, variant: !canPlayNextLevel ? "primary" : "secondary", size: "lg" }, "Level Select") ),
+          isLevelsMode ? ( React.createElement(Button_InlinedComponent, { ref: replayButtonRef, onClick: handleReplayClick, size: "lg", variant: "secondary" }, "Restart Level") ) 
+                       : ( React.createElement(Button_InlinedComponent, { ref: replayButtonRef, onClick: handleReplayClick, size: "lg", variant: "primary" }, "Play Again") ),
+           React.createElement(Button_InlinedComponent, { ref: returnMenuButtonRef, onClick: handleReturnMenuClick, variant: "ghost", size: "md", className: "mt-2" }, "Return to Menu")
+        )
+      )
+    )
+  );
+};
+WinScreen_InlinedComponent.displayName = 'WinScreen';
+// --- END OF INLINED components/WinScreen.tsx ---
+
+// --- START OF INLINED components/LevelCard.tsx ---
+console.log('[LevelCard.tsx inline] Loading...');
+const LevelCard_InlinedComponent = React.forwardRef(({ level, onSelectLevel, isCompleted, bestTime, isLocked }, ref) => {
+  const handleSelect = () => {
+    if (!isLocked) { onSelectLevel(level.id); } 
+    else { playSound(SoundEffect.WALL_BUMP, 0.4); }
+  };
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); handleSelect(); }
+  };
+  return (
+    React.createElement("div", { 
+      ref: ref,
+      className: `${THEME_COLORS.panelBg} p-4 rounded-lg shadow-xl ${THEME_COLORS.panelBorder} border-2 flex flex-col justify-between ${isLocked ? 'opacity-60 saturate-50 cursor-default' : `hover:shadow-fuchsia-500/40 ${THEME_COLORS.panelBorderAccent} transition-all duration-150 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-fuchsia-500 focus:ring-offset-2 focus:ring-offset-[#0A051E] ${THEME_COLORS.panelBorderAccent} cursor-pointer`}`,
+      tabIndex: -1, 
+      onKeyDown: handleKeyDown,
+      onClick: handleSelect,
+      role: isLocked ? undefined : "button",
+      "aria-label": `Level ${level.id}: ${level.name}${isLocked ? ' (Locked)' : ''}`
+    },
+      React.createElement("div", null,
+        React.createElement("div", { className: "flex justify-between items-start mb-1"},
+            React.createElement("h3", { className: `font-display text-xl font-bold ${isLocked ? THEME_COLORS.textSecondary : THEME_COLORS.textAccent}`}, `Level ${level.id}: ${level.name}`),
+            isLocked && ( React.createElement("svg", {xmlns:"http://www.w3.org/2000/svg", viewBox:"0 0 24 24", fill:"currentColor", className:`w-6 h-6 ${THEME_COLORS.textSecondary} opacity-70`}, React.createElement("path", {"fillRule":"evenodd", "d":"M12 1.5a5.25 5.25 0 00-5.25 5.25v3a3 3 0 00-3 3v6.75a3 3 0 003 3h10.5a3 3 0 003-3v-6.75a3 3 0 00-3-3v-3A5.25 5.25 0 0012 1.5zm3.75 8.25v-3a3.75 3.75 0 10-7.5 0v3h7.5z", "clipRule":"evenodd" })) )
+        ),
+        React.createElement("p", { className: `${isLocked ? 'text-indigo-400' : THEME_COLORS.textSecondary} font-body text-sm mb-3 h-12 overflow-hidden`}, level.description),
+        !isLocked && (
+          React.createElement("div", {className: `text-xs ${THEME_COLORS.textSecondary} opacity-80 mb-2 font-body`},
+            isCompleted && ( React.createElement("span", { className: "text-lime-400 font-semibold block"}, "\u2713 Level Complete") ),
+            bestTime !== undefined && ( React.createElement("span", { className: "block"}, `Best Time: ${bestTime.toFixed(2)}s`) ),
+            level.timeLimit && ( React.createElement("span", {className: `block ${THEME_COLORS.textDanger} font-semibold`}, `Time Limit: ${level.timeLimit}s`) ),
+            !isCompleted && bestTime === undefined && ( React.createElement("span", { className: "block text-indigo-400 italic"}, "Not Completed") )
+          )
+        )
+      ),
+      React.createElement(Button_InlinedComponent, { 
+        onClick: (e) => { e.stopPropagation(); handleSelect(); }, 
+        className: "w-full mt-auto font-body", disabled: isLocked,
+        variant: isLocked ? "ghost" : "primary", tabIndex: -1 
+      }, isLocked ? "Level Locked" : `Play Level ${level.id}`)
+    )
+  );
+});
+LevelCard_InlinedComponent.displayName = 'LevelCard';
+// --- END OF INLINED components/LevelCard.tsx ---
+
+// --- START OF INLINED components/LevelSelectScreen.tsx ---
+console.log('[LevelSelectScreen.tsx inline] Loading...');
+const LevelSelectScreen_InlinedComponent = ({ 
+  onSetScreen, 
+  onStartLevel, 
+  levelProgress, 
+  maxUnlockedLevel,
+  controls,
+  onUnlockAllLevels
+}) => {
+  const returnButtonRef = React.useRef(null);
+  const createLevelButtonRef = React.useRef(null);
+  const levelCardRefs = React.useMemo(() => Array(LEVELS_DATA.length).fill(null).map(() => React.createRef()), []);
+  const [cheatCodeBuffer, setCheatCodeBuffer] = React.useState('');
+  
+  const calculateNumCols_Select = () => {
+    if (typeof window !== 'undefined') {
+      if (window.innerWidth >= 1280) return 4; 
+      if (window.innerWidth >= 1024) return 3; 
+      if (window.innerWidth >= 640) return 2;  
+    }
+    return 1; 
+  };
+  const [numCols, setNumCols] = React.useState(calculateNumCols_Select);
+
+  React.useEffect(() => {
+    const handleResize = () => { setNumCols(calculateNumCols_Select()); };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const focusableItems = React.useMemo(() => [
+    returnButtonRef, createLevelButtonRef, ...levelCardRefs,
+  ].filter(ref => ref !== null), [returnButtonRef, createLevelButtonRef, levelCardRefs]);
+
+  useGameKeyNavigation_InlinedComponent({
+    itemRefs: focusableItems, controls, enabled: true, 
+    layout: { numCols: numCols, loop: true, gridRules: [ 
+        {startIndex:0, numItems: 2, numCols: 2}, 
+        {startIndex: 2, numItems: levelCardRefs.length, numCols: numCols} 
+      ] 
+    },
+    initialFocusedIndex: 0,
+    onFocusItem: (index, element) => { element.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
+  });
+
+  const handleReturnToMenu = () => { onSetScreen(Screen.MENU); };
+  const handleCreateLevel = () => { playSound(SoundEffect.BUTTON_CLICK_SECONDARY); onSetScreen(Screen.LEVEL_EDITOR); };
+
+  React.useEffect(() => {
+    const handleEscKey = (event) => { if (event.key === 'Escape') { handleReturnToMenu(); } };
+    window.addEventListener('keydown', handleEscKey);
+    return () => { window.removeEventListener('keydown', handleEscKey); };
+  }, [onSetScreen]);
+
+  React.useEffect(() => {
+    const CHEAT_CODE = "unlock";
+    const handleCheatInput = (event) => {
+      const activeElement = document.activeElement;
+      if (activeElement && (activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA' || activeElement.tagName === 'BUTTON' || activeElement.tagName === 'SELECT')) { return; }
+      if (event.key.length === 1 && event.key.match(/[a-z]/i)) {
+        const newBuffer = (cheatCodeBuffer + event.key.toLowerCase()).slice(-CHEAT_CODE.length);
+        setCheatCodeBuffer(newBuffer);
+        if (newBuffer === CHEAT_CODE) { onUnlockAllLevels(); playSound(SoundEffect.SKIN_EQUIP); setCheatCodeBuffer(''); }
+      }
+    };
+    window.addEventListener('keydown', handleCheatInput);
+    return () => { window.removeEventListener('keydown', handleCheatInput); };
+  }, [cheatCodeBuffer, onUnlockAllLevels]);
+
+  return (
+    React.createElement("div", { className: `min-h-screen ${THEME_COLORS.background} flex flex-col items-center p-4 sm:p-8`},
+      React.createElement("div", { className: "w-full max-w-7xl mb-6 sm:mb-10 relative flex flex-col items-center justify-center"},
+        React.createElement("div", { className: "w-full flex justify-between items-center mb-4"},
+          React.createElement(Button_InlinedComponent, { ref: returnButtonRef, onClick: handleReturnToMenu, variant: "ghost", size: "md", className: "font-body !px-3 sm:!px-4", "aria-label": "Return to Menu" }, React.createElement("span", {"aria-hidden":"true"}, "\u2190"), " Menu"),
+          React.createElement(Button_InlinedComponent, { ref: createLevelButtonRef, onClick: handleCreateLevel, variant: "secondary", size: "md", className: "font-body !px-3 sm:!px-4", "aria-label": "Create New Level" }, "Create Level ", React.createElement("span", {"aria-hidden":"true", className:"ml-1"}, "\u270E"))
+        ),
+        React.createElement("h2", { className: `font-display text-4xl sm:text-5xl font-bold ${THEME_COLORS.textAccent} text-center`}, "Level Select")
+      ),
+      React.createElement("div", { className: "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 w-full max-w-7xl overflow-y-auto max-h-[calc(100vh-16rem)] sm:max-h-[calc(100vh-18rem)] pb-4 pr-2"},
+        LEVELS_DATA.map((level, index) => (
+          React.createElement(LevelCard_InlinedComponent, { 
+            key: level.id, ref: levelCardRefs[index], level: level, onSelectLevel: onStartLevel,
+            isCompleted: levelProgress[level.id]?.completed, bestTime: levelProgress[level.id]?.bestTime,
+            isLocked: level.id > maxUnlockedLevel
+          })
+        ))
+      )
+    )
+  );
+};
+LevelSelectScreen_InlinedComponent.displayName = 'LevelSelectScreen';
+// --- END OF INLINED components/LevelSelectScreen.tsx ---
+
+// --- START OF INLINED components/LevelEditorScreen.tsx ---
+console.log('[LevelEditorScreen.tsx inline] Loading...');
+const LevelEditorScreen_InlinedComponent = ({ onSetScreen, controls }) => {
+  const MIN_DIMENSION_EDITOR = 5;
+  const MAX_DIMENSION_EDITOR = 31;
+  const DEFAULT_EDITOR_WIDTH_INTERNAL = 15;
+  const DEFAULT_EDITOR_HEIGHT_INTERNAL = 11;
+  const EDITOR_CELL_SIZE_PX_INTERNAL = 25;
+
+  const createEmptyGrid_Editor = (width, height) => {
+    return Array.from({ length: height }, () =>
+      Array.from({ length: width }, () => ({ isWall: true, isPath: false }))
+    );
+  };
+  
+  const LevelEditorGridCanvas_Internal = ({ grid, cellSize, selectedTool, onCellInteraction, width, height }) => {
+    const canvasRef = React.useRef(null);
+    const [isPainting, setIsPainting] = React.useState(false);
+    const lastPaintedCell = React.useRef(null);
+
+    React.useEffect(() => {
+      const canvas = canvasRef.current;
+      if (!canvas || !grid || grid.length === 0) return;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+      ctx.fillStyle = THEME_COLORS.canvasPath;
+      ctx.fillRect(0, 0, width, height);
+      for (let y = 0; y < grid.length; y++) {
+        for (let x = 0; x < grid[0].length; x++) {
+          const cell = grid[y][x];
+          ctx.beginPath();
+          if (cell.isWall) ctx.fillStyle = THEME_COLORS.canvasWall;
+          else if (cell.isStart) ctx.fillStyle = THEME_COLORS.canvasStart;
+          else if (cell.isEnd) ctx.fillStyle = THEME_COLORS.canvasEnd;
+          else if (cell.isKey) ctx.fillStyle = THEME_COLORS.canvasKey;
+          else if (cell.isHunter) ctx.fillStyle = THEME_COLORS.canvasHunter;
+          else ctx.fillStyle = THEME_COLORS.canvasPath; 
+          ctx.rect(x * cellSize, y * cellSize, cellSize, cellSize);
+          ctx.fill();
+          ctx.strokeStyle = '#374151'; 
+          ctx.lineWidth = 0.5;
+          ctx.strokeRect(x * cellSize, y * cellSize, cellSize, cellSize);
+          if (cell.isStart || cell.isEnd || cell.isKey || cell.isHunter) {
+              ctx.fillStyle = 'white'; ctx.font = `${cellSize * 0.6}px Orbitron`;
+              ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+              let symbol = '';
+              if(cell.isStart) symbol = 'S'; else if(cell.isEnd) symbol = 'E';
+              else if(cell.isKey) symbol = 'K'; else if(cell.isHunter) symbol = 'H';
+              ctx.fillText(symbol, x * cellSize + cellSize / 2, y * cellSize + cellSize / 2 + 1);
+          }
+        }
+      }
+    }, [grid, cellSize, width, height]);
+
+    const handleInteraction = (event, isContinuingPaint = false) => {
+      const canvas = canvasRef.current; if (!canvas) return;
+      const rect = canvas.getBoundingClientRect();
+      let clientX, clientY;
+      if ('touches' in event) { clientX = event.touches[0].clientX; clientY = event.touches[0].clientY; } 
+      else { clientX = event.clientX; clientY = event.clientY; }
+      const x = Math.floor((clientX - rect.left) / cellSize);
+      const y = Math.floor((clientY - rect.top) / cellSize);
+      if (x >= 0 && x < grid[0].length && y >= 0 && y < grid.length) {
+        if(isContinuingPaint && lastPaintedCell.current?.x === x && lastPaintedCell.current?.y === y) return;
+        onCellInteraction(x, y, selectedTool);
+        lastPaintedCell.current = {x, y};
+      }
+    };
+    const handleMouseDown = (event) => { setIsPainting(true); lastPaintedCell.current = null; handleInteraction(event); };
+    const handleMouseMove = (event) => { if (isPainting) { handleInteraction(event, true); } };
+    const handleMouseUpOrLeave = () => { setIsPainting(false); lastPaintedCell.current = null; };
+    const handleTouchStart = (event) => { setIsPainting(true); lastPaintedCell.current = null; handleInteraction(event); event.preventDefault(); };
+    const handleTouchMove = (event) => { if (isPainting) { handleInteraction(event, true); } event.preventDefault(); };
+
+    return React.createElement("canvas", {
+      ref: canvasRef, width: width, height: height,
+      className: `rounded-md shadow-lg border-2 ${THEME_COLORS.panelBorder} cursor-crosshair touch-none`,
+      onMouseDown: handleMouseDown, onMouseMove: handleMouseMove, onMouseUp: handleMouseUpOrLeave, onMouseLeave: handleMouseUpOrLeave,
+      onTouchStart: handleTouchStart, onTouchMove: handleTouchMove, onTouchEnd: handleMouseUpOrLeave,
+      "aria-label": "Level editor grid"
+    });
+  };
+
+  const [editorConfig, setEditorConfig] = React.useState({
+    name: '', description: '', width: DEFAULT_EDITOR_WIDTH_INTERNAL, height: DEFAULT_EDITOR_HEIGHT_INTERNAL,
+    timeLimit: 0, isDashLevel: false, isDarknessLevel: false,
+    controlScheme: 'normal', hunterMovementType: 'tile', hunterPhasesThroughWalls: false,
+  });
+  const [grid, setGrid] = React.useState(() => createEmptyGrid_Editor(DEFAULT_EDITOR_WIDTH_INTERNAL, DEFAULT_EDITOR_HEIGHT_INTERNAL));
+  const [selectedTool, setSelectedTool] = React.useState(EditorTool.WALL);
+  const [showInfoModal, setShowInfoModal] = React.useState(false);
+  const [modalMessage, setModalMessage] = React.useState('');
+  const [validationError, setValidationError] = React.useState(null);
+  const exitButtonRef = React.useRef(null);
+
+  React.useEffect(() => { setGrid(createEmptyGrid_Editor(editorConfig.width, editorConfig.height)); }, [editorConfig.width, editorConfig.height]);
+
+  const handleConfigChange = (e) => {
+    const { name, value, type } = e.target;
+    let processedValue = value;
+    if (type === 'checkbox') { processedValue = e.target.checked; } 
+    else if (type === 'number' || name === 'width' || name === 'height' || name === 'timeLimit') {
+      processedValue = parseInt(value, 10);
+      if (name === 'width' || name === 'height') { processedValue = Math.max(MIN_DIMENSION_EDITOR, Math.min(MAX_DIMENSION_EDITOR, processedValue || MIN_DIMENSION_EDITOR)); }
+      else if (name === 'timeLimit') { processedValue = Math.max(0, processedValue || 0); }
+    }
+    setEditorConfig(prev => ({ ...prev, [name]: processedValue }));
+  };
+  
+  const handleCellInteraction = (x, y, tool) => {
+    setGrid(prevGrid => {
+      const newGrid = prevGrid.map(row => row.map(cell => ({...cell}))); 
+      const currentCell = newGrid[y][x];
+      currentCell.isStart = false; currentCell.isEnd = false;
+      currentCell.isKey = false; currentCell.isHunter = false;
+      if (tool === EditorTool.START || tool === EditorTool.END) {
+        newGrid.forEach(row => row.forEach(cell => {
+          if (tool === EditorTool.START) cell.isStart = false;
+          if (tool === EditorTool.END) cell.isEnd = false;
+        }));
+      }
+      if (tool === EditorTool.KEY) { newGrid.forEach(row => row.forEach(cell => cell.isKey = false)); }
+      switch (tool) {
+        case EditorTool.WALL: currentCell.isWall = true; currentCell.isPath = false; break;
+        case EditorTool.PATH: currentCell.isWall = false; currentCell.isPath = true; break;
+        case EditorTool.START: currentCell.isStart = true; currentCell.isPath = true; currentCell.isWall = false; break;
+        case EditorTool.END: currentCell.isEnd = true; currentCell.isPath = true; currentCell.isWall = false; break;
+        case EditorTool.KEY: currentCell.isKey = true; currentCell.isPath = true; currentCell.isWall = false; break;
+        case EditorTool.HUNTER: currentCell.isHunter = true; currentCell.isPath = true; currentCell.isWall = false; break;
+        case EditorTool.ERASER: currentCell.isWall = false; currentCell.isPath = true; currentCell.isStart = false; currentCell.isEnd = false; currentCell.isKey = false; currentCell.isHunter = false; break;
+      }
+      return newGrid;
+    });
+  };
+
+  const validateLevel = () => {
+    setValidationError(null);
+    if (!editorConfig.name.trim()) { setValidationError("Level Name is required."); return false; }
+    let startPos = null; let endPos = null;
+    grid.forEach((row, y) => row.forEach((cell, x) => {
+      if (cell.isStart) startPos = { x, y }; if (cell.isEnd) endPos = { x, y };
+    }));
+    if (!startPos) { setValidationError("Start 'S' position is required."); return false; }
+    if (!endPos) { setValidationError("End 'E' position is required."); return false; }
+    if (startPos.x === endPos.x && startPos.y === endPos.y) { setValidationError("Start and End positions cannot be the same."); return false;}
+    const q = [startPos]; const visited = new Set(); visited.add(`${startPos.x},${startPos.y}`);
+    let head = 0; let pathFound = false;
+    while(head < q.length) {
+        const curr = q[head++]; if(curr.x === endPos.x && curr.y === endPos.y) { pathFound = true; break; }
+        const dirs = [{dx:0,dy:1},{dx:0,dy:-1},{dx:1,dy:0},{dx:-1,dy:0}];
+        for(const dir of dirs) {
+            const nextX = curr.x + dir.dx; const nextY = curr.y + dir.dy;
+            if(nextX >=0 && nextX < editorConfig.width && nextY >=0 && nextY < editorConfig.height && grid[nextY][nextX].isPath && !visited.has(`${nextX},${nextY}`)) {
+                visited.add(`${nextX},${nextY}`); q.push({x: nextX, y: nextY});
+            }
+        }
+    }
+    if(!pathFound) { setValidationError("No valid path from Start to End."); return false; }
+    return true;
+  };
+
+  const levelToCodeString = (level) => {
+    const parts = [];
+    parts.push(`    id: ${level.id}`);
+    parts.push(`    name: "${level.name.replace(/"/g, '\\"')}"`);
+    parts.push(`    description: "${level.description.replace(/"/g, '\\"')}"`);
+    parts.push(`    width: ${level.width}`);
+    parts.push(`    height: ${level.height}`);
+    parts.push(`    mazeDefinition: [\n      "${level.mazeDefinition.join('",\n      "')}"\n    ]`);
+    if (level.timeLimit) parts.push(`    timeLimit: ${level.timeLimit}`);
+    const levelAsAny = level;
+    if (levelAsAny.unlocksAuraPaletteId) { const palette = AURA_PALETTES.find(p => p.id === levelAsAny.unlocksAuraPaletteId); if (palette) parts.push(`    unlocksAuraPaletteId: AURA_PALETTES.find(p => p.id === '${palette.id}')?.id`);}
+    if (levelAsAny.unlocksCoreMatrixId) { const core = CORE_MATRIX_ITEMS.find(c => c.id === levelAsAny.unlocksCoreMatrixId); if (core) parts.push(`    unlocksCoreMatrixId: CORE_MATRIX_ITEMS.find(c => c.id === '${core.id}')?.id`);}
+    if (levelAsAny.unlocksTrailSignatureId) { const trail = TRAIL_SIGNATURE_ITEMS.find(t => t.id === levelAsAny.unlocksTrailSignatureId); if (trail) parts.push(`    unlocksTrailSignatureId: TRAIL_SIGNATURE_ITEMS.find(t => t.id === '${trail.id}')?.id`);}
+    if (level.mazeDefinition.some(row => row.includes('H'))) { parts.push(`    hunterMovementType: '${level.hunterMovementType || 'tile'}'`); parts.push(`    hunterPhasesThroughWalls: ${!!level.hunterPhasesThroughWalls}`);}
+    if (level.isDashLevel) parts.push(`    isDashLevel: true`);
+    if (level.isDarknessLevel) parts.push(`    isDarknessLevel: true`);
+    if (level.controlScheme && level.controlScheme !== 'normal') parts.push(`    controlScheme: '${level.controlScheme}'`);
+    return `  {\n${parts.join(',\n')}\n  }`;
+  };
+
+  const downloadFile = (filename, text) => {
+    const element = document.createElement('a');
+    element.setAttribute('href', 'data:text/typescript;charset=utf-8,' + encodeURIComponent(text));
+    element.setAttribute('download', filename); element.style.display = 'none';
+    document.body.appendChild(element); element.click(); document.body.removeChild(element);
+  }
+
+  const handleGenerateAndDownload = () => {
+    playSound(SoundEffect.BUTTON_CLICK); if (!validateLevel()) { playSound(SoundEffect.WALL_BUMP, 0.5); return; }
+    const maxExistingId = LEVELS_DATA.reduce((max, level) => Math.max(max, level.id), 0);
+    const newLevelId = maxExistingId + 1;
+    const mazeDefStrings = grid.map(row => row.map(cell => {
+        if (cell.isStart) return 'S'; if (cell.isEnd) return 'E'; if (cell.isKey) return 'K';
+        if (cell.isHunter) return 'H'; if (cell.isWall) return 'W'; return 'P'; 
+      }).join('')
+    );
+    const newLevelData = {
+      id: newLevelId, name: editorConfig.name.trim() || `Custom Level ${newLevelId}`,
+      description: editorConfig.description.trim() || `A new custom challenge.`,
+      width: editorConfig.width, height: editorConfig.height, mazeDefinition: mazeDefStrings,
+    };
+    if (editorConfig.timeLimit > 0) newLevelData.timeLimit = editorConfig.timeLimit;
+    if (grid.some(r => r.some(c => c.isHunter))) { newLevelData.hunterMovementType = editorConfig.hunterMovementType; newLevelData.hunterPhasesThroughWalls = editorConfig.hunterPhasesThroughWalls;}
+    if (editorConfig.isDashLevel) newLevelData.isDashLevel = true;
+    if (editorConfig.isDarknessLevel) newLevelData.isDarknessLevel = true;
+    if (editorConfig.controlScheme !== 'normal') newLevelData.controlScheme = editorConfig.controlScheme;
+    let fullFileContent = `import { Level, PlayerCoreShape, PlayerTrailStyle } from '../types';\n`;
+    fullFileContent += `import { AURA_PALETTES, CORE_MATRIX_ITEMS, TRAIL_SIGNATURE_ITEMS } from '../constants';\n\n`;
+    fullFileContent += `export const LEVELS_DATA: Level[] = [\n`;
+    LEVELS_DATA.forEach(level => { fullFileContent += levelToCodeString(level) + ",\n"; });
+    fullFileContent += levelToCodeString(newLevelData) + "\n"; 
+    fullFileContent += `];\n`;
+    downloadFile('levelData.ts', fullFileContent);
+    setModalMessage(`'levelData.ts' has been prepared and download initiated.\n\nPlease replace the existing '/lib/levelData.ts' file in your project with the downloaded one.\n\nThe new level has been assigned ID: ${newLevelId}.`);
+    setShowInfoModal(true); playSound(SoundEffect.SKIN_EQUIP);
+  };
+  
+  const handleResetGrid = () => { if (window.confirm("Are you sure you want to reset the grid? All current drawing will be lost.")) { playSound(SoundEffect.BUTTON_CLICK_SECONDARY); setGrid(createEmptyGrid_Editor(editorConfig.width, editorConfig.height)); setValidationError(null); }};
+  const handleExitEditor = () => { if (window.confirm("Are you sure you want to exit? Unsaved changes will be lost.")) { playSound(SoundEffect.BUTTON_CLICK_SECONDARY); onSetScreen(Screen.LEVEL_SELECT); }};
+
+  const toolData = [
+    { tool: EditorTool.WALL, label: "Wall", symbol: "W", colorClass: THEME_COLORS.canvasWall.replace('bg-','').replace('#','') }, { tool: EditorTool.PATH, label: "Path", symbol: "P", colorClass: THEME_COLORS.canvasPath.replace('bg-','').replace('#','') },
+    { tool: EditorTool.START, label: "Start", symbol: "S", colorClass: THEME_COLORS.canvasStart.replace('bg-','').replace('#','') }, { tool: EditorTool.END, label: "End", symbol: "E", colorClass: THEME_COLORS.canvasEnd.replace('bg-','').replace('#','') },
+    { tool: EditorTool.KEY, label: "Key", symbol: "K", colorClass: THEME_COLORS.canvasKey.replace('bg-','').replace('#','') }, { tool: EditorTool.HUNTER, label: "Hunter", symbol: "H", colorClass: THEME_COLORS.canvasHunter.replace('bg-','').replace('#','') },
+    { tool: EditorTool.ERASER, label: "Eraser", symbol: "\u232B" },
+  ];
+  const canvasRenderWidth = editorConfig.width * EDITOR_CELL_SIZE_PX_INTERNAL;
+  const canvasRenderHeight = editorConfig.height * EDITOR_CELL_SIZE_PX_INTERNAL;
+  const toolbarRefs = React.useMemo(() => toolData.map(() => React.createRef()), [toolData.length]);
+
+  return (
+    React.createElement("div", {className: `min-h-screen ${THEME_COLORS.background} flex flex-col items-center p-3 sm:p-4 font-body text-sm`},
+      React.createElement("div", {className: `w-full max-w-7xl ${THEME_COLORS.panelBg} ${THEME_COLORS.panelBorder} border-2 rounded-lg shadow-2xl p-3 sm:p-5`},
+        React.createElement("div", {className: "flex justify-between items-center mb-4"},
+          React.createElement("h2", {className: `font-display text-2xl sm:text-3xl font-bold ${THEME_COLORS.textAccent}`}, "Level Editor"),
+          React.createElement(Button_InlinedComponent, {ref: exitButtonRef, onClick: handleExitEditor, variant: "ghost", size: "sm"}, "\u2190 Exit Editor")
+        ),
+        React.createElement("div", {className: "flex flex-col lg:flex-row gap-4"},
+          React.createElement("div", {className: "flex-grow flex justify-center items-center lg:min-w-[400px] lg:max-w-[calc(100%-380px)] overflow-auto p-1 bg-black/20 rounded-md"},
+            grid.length > 0 && grid[0].length > 0 && React.createElement(LevelEditorGridCanvas_Internal, {grid, cellSize: EDITOR_CELL_SIZE_PX_INTERNAL, selectedTool, onCellInteraction: handleCellInteraction, width: canvasRenderWidth, height: canvasRenderHeight})
+          ),
+          React.createElement("div", {className: "lg:w-[360px] flex-shrink-0 space-y-4"},
+            React.createElement("div", {className: `${THEME_COLORS.panelBg} p-3 rounded-md border ${THEME_COLORS.panelBorder}`},
+              React.createElement("h3", {className: `font-display text-lg ${THEME_COLORS.textPrimary} mb-2`}, "Tools"),
+              React.createElement("div", {className: "grid grid-cols-3 gap-2"},
+                toolData.map((item, index) => React.createElement(Button_InlinedComponent, {key:item.tool, ref:toolbarRefs[index], onClick:()=>{ playSound(SoundEffect.BUTTON_CLICK_SECONDARY, 0.3); setSelectedTool(item.tool);}, variant:selectedTool === item.tool ? 'primary' : 'secondary', size:"sm", className:`!px-2 !py-1.5 text-xs ${selectedTool === item.tool ? 'ring-2 ring-offset-1 ring-offset-transparent ring-fuchsia-400' : ''}`, title:item.label}, item.symbol && React.createElement("span", {className:"font-bold text-base mr-1", style:{color: item.colorClass && selectedTool !== item.tool ? `#${item.colorClass}`: 'inherit'}},item.symbol), item.label))
+              )
+            ),
+            React.createElement("div", {className: `${THEME_COLORS.panelBg} p-3 rounded-md border ${THEME_COLORS.panelBorder} max-h-[calc(100vh-250px)] overflow-y-auto`},
+              React.createElement("h3", {className: `font-display text-lg ${THEME_COLORS.textPrimary} mb-3`}, "Level Configuration"),
+              React.createElement("div", {className: "space-y-3"},
+                React.createElement("div", null, React.createElement("label", {htmlFor:"name", className:`${THEME_COLORS.textSecondary} block mb-1`},"Name:"), React.createElement("input",{type:"text",name:"name",value:editorConfig.name,onChange:handleConfigChange, className:`w-full p-2 rounded ${THEME_COLORS.inputBg} ${THEME_COLORS.inputText} ${THEME_COLORS.inputBorder} border ${THEME_COLORS.inputFocusRing}`})),
+                React.createElement("div", null, React.createElement("label", {htmlFor:"description", className:`${THEME_COLORS.textSecondary} block mb-1`},"Description:"), React.createElement("textarea",{name:"description",value:editorConfig.description,onChange:handleConfigChange,rows:2,className:`w-full p-2 rounded ${THEME_COLORS.inputBg} ${THEME_COLORS.inputText} ${THEME_COLORS.inputBorder} border ${THEME_COLORS.inputFocusRing}`})),
+                React.createElement("div", {className:"flex gap-2"},
+                  React.createElement("div", null, React.createElement("label",{htmlFor:"width",className:`${THEME_COLORS.textSecondary} block mb-1`},`Width (${MIN_DIMENSION_EDITOR}-${MAX_DIMENSION_EDITOR}):`), React.createElement("input",{type:"number",name:"width",value:editorConfig.width,onChange:handleConfigChange,min:MIN_DIMENSION_EDITOR,max:MAX_DIMENSION_EDITOR,className:`w-full p-2 rounded ${THEME_COLORS.inputBg} ${THEME_COLORS.inputText} ${THEME_COLORS.inputBorder} border ${THEME_COLORS.inputFocusRing}`})),
+                  React.createElement("div", null, React.createElement("label",{htmlFor:"height",className:`${THEME_COLORS.textSecondary} block mb-1`},`Height (${MIN_DIMENSION_EDITOR}-${MAX_DIMENSION_EDITOR}):`), React.createElement("input",{type:"number",name:"height",value:editorConfig.height,onChange:handleConfigChange,min:MIN_DIMENSION_EDITOR,max:MAX_DIMENSION_EDITOR,className:`w-full p-2 rounded ${THEME_COLORS.inputBg} ${THEME_COLORS.inputText} ${THEME_COLORS.inputBorder} border ${THEME_COLORS.inputFocusRing}`}))
+                ),
+                React.createElement("div", null, React.createElement("label",{htmlFor:"timeLimit",className:`${THEME_COLORS.textSecondary} block mb-1`},"Time Limit (seconds, 0 for none):"), React.createElement("input",{type:"number",name:"timeLimit",value:editorConfig.timeLimit,onChange:handleConfigChange,min:"0",className:`w-full p-2 rounded ${THEME_COLORS.inputBg} ${THEME_COLORS.inputText} ${THEME_COLORS.inputBorder} border ${THEME_COLORS.inputFocusRing}`})),
+                React.createElement("div", {className:"space-y-1 pt-1"},
+                  React.createElement("label", {className:`flex items-center ${THEME_COLORS.textSecondary}`}, React.createElement("input",{type:"checkbox",name:"isDashLevel",checked:editorConfig.isDashLevel,onChange:handleConfigChange,className:"mr-2 h-4 w-4 rounded text-fuchsia-600 focus:ring-fuchsia-500 border-indigo-500 bg-indigo-800"})," Is Dash Level"),
+                  React.createElement("label", {className:`flex items-center ${THEME_COLORS.textSecondary}`}, React.createElement("input",{type:"checkbox",name:"isDarknessLevel",checked:editorConfig.isDarknessLevel,onChange:handleConfigChange,className:"mr-2 h-4 w-4 rounded text-fuchsia-600 focus:ring-fuchsia-500 border-indigo-500 bg-indigo-800"})," Is Darkness Level")
+                ),
+                React.createElement("div", null, React.createElement("label",{htmlFor:"controlScheme",className:`${THEME_COLORS.textSecondary} block mb-1`},"Control Scheme:"), React.createElement("select",{name:"controlScheme",value:editorConfig.controlScheme,onChange:handleConfigChange,className:`w-full p-2 rounded ${THEME_COLORS.inputBg} ${THEME_COLORS.inputText} ${THEME_COLORS.inputBorder} border ${THEME_COLORS.inputFocusRing}`}, React.createElement("option",{value:"normal"},"Normal"),React.createElement("option",{value:"mirrored"},"Mirrored"))),
+                React.createElement("div", null,
+                  React.createElement("h4", {className:`${THEME_COLORS.textSecondary} mt-2 mb-1`},"Hunter Settings (if any placed):"),
+                  React.createElement("label",{htmlFor:"hunterMovementType",className:`${THEME_COLORS.textSecondary} block mb-1`},"Movement Type:"), React.createElement("select",{name:"hunterMovementType",value:editorConfig.hunterMovementType,onChange:handleConfigChange,className:`w-full p-2 rounded ${THEME_COLORS.inputBg} ${THEME_COLORS.inputText} ${THEME_COLORS.inputBorder} border ${THEME_COLORS.inputFocusRing}`}, React.createElement("option",{value:"tile"},"Tile-based"),React.createElement("option",{value:"continuous"},"Continuous")),
+                  React.createElement("label", {className:`flex items-center mt-2 ${THEME_COLORS.textSecondary}`}, React.createElement("input",{type:"checkbox",name:"hunterPhasesThroughWalls",checked:editorConfig.hunterPhasesThroughWalls,onChange:handleConfigChange,className:"mr-2 h-4 w-4 rounded text-fuchsia-600 focus:ring-fuchsia-500 border-indigo-500 bg-indigo-800"})," Hunter Phases Through Walls (Continuous Only)")
+                )
+              )
+            ),
+            React.createElement("div", {className:"flex flex-col sm:flex-row gap-2 mt-3"},
+              React.createElement(Button_InlinedComponent, {onClick:handleGenerateAndDownload, variant:"primary", className:"flex-1"},"Save & Download File"),
+              React.createElement(Button_InlinedComponent, {onClick:handleResetGrid, variant:"ghost", className:"flex-1"},"Reset Grid")
+            ),
+            validationError && React.createElement("p", {className:`mt-2 text-center ${THEME_COLORS.textDanger}`}, validationError)
+          )
+        )
+      ),
+      showInfoModal && (
+        React.createElement("div", {className:"fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50"},
+          React.createElement("div", {className:`${THEME_COLORS.panelBg} ${THEME_COLORS.panelBorderAccent} border-2 p-6 rounded-lg shadow-2xl w-full max-w-lg max-h-[90vh] flex flex-col`},
+            React.createElement("h3", {className:`font-display text-2xl ${THEME_COLORS.textAccent} mb-4`},"Level File Ready!"),
+            React.createElement("p", {className:`${THEME_COLORS.textSecondary} mb-3 text-sm whitespace-pre-line`}, modalMessage),
+            React.createElement(Button_InlinedComponent, {onClick:()=>{ playSound(SoundEffect.BUTTON_CLICK_SECONDARY); setShowInfoModal(false);}, variant:"primary", className:"mt-4 w-full"},"Close")
+          )
+        )
+      )
+    )
+  );
+};
+LevelEditorScreen_InlinedComponent.displayName = 'LevelEditorScreen';
+// --- END OF INLINED components/LevelEditorScreen.tsx ---
+
+// --- START OF INLINED components/MenuScreen.tsx ---
+console.log('[MenuScreen.tsx inline] Loading...');
+const MenuScreen_InlinedComponent = ({ onSetScreen, onStartGame, onSelectLevelMode, controls }) => {
+  const gameModes = Object.values(GameMode);
+  const modeCardRefs = React.useMemo(() => Array(gameModes.length).fill(null).map(() => React.createRef()), [gameModes.length]);
+  const skinsButtonRef = React.useRef(null); 
+  const settingsButtonRef = React.useRef(null);
+  const [isMenuNavEnabled, setIsMenuNavEnabled] = React.useState(true);
+  const focusableItems = React.useMemo(() => [ ...modeCardRefs, skinsButtonRef, settingsButtonRef, ].filter(ref => ref !== null), [modeCardRefs, skinsButtonRef, settingsButtonRef]);
+  const navLayoutCols = gameModes.length; 
+  useGameKeyNavigation_InlinedComponent({ itemRefs: focusableItems, controls, enabled: isMenuNavEnabled, layout: { numCols: navLayoutCols, loop: true }, });
+  const handleSkinsClick = () => { playSound(SoundEffect.BUTTON_CLICK_SECONDARY); onSetScreen(Screen.SKIN_CUSTOMIZATION); };
+  const handleSettingsClick = () => { playSound(SoundEffect.BUTTON_CLICK_SECONDARY); onSetScreen(Screen.SETTINGS); };
+  return (
+    React.createElement("div", { className: 'min-h-screen ' + THEME_COLORS.background + ' flex flex-col items-center justify-center p-4 sm:p-8' },
+      React.createElement("header", { className: "text-center mb-8 sm:mb-12" },
+        React.createElement("h1", { className: 'font-display text-4xl sm:text-6xl font-black mb-2 ' + THEME_COLORS.textPrimary + ' tracking-wider' },
+          React.createElement("span", { className: THEME_COLORS.textAccent }, "Maze"),
+          React.createElement("span", { className: "text-cyan-400" }, " Game")
+        ),
+        React.createElement("p", { className: THEME_COLORS.textSecondary + ' font-body text-lg sm:text-xl' }, "Find the Outway")
+      ),
+      React.createElement("div", { className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8 sm:mb-12 w-full max-w-7xl" },
+        gameModes.map((mode, index) => (
+          React.createElement(ModeCard_InlinedComponent, { key: mode, ref: modeCardRefs[index], mode: mode, onSelectMode: onStartGame, onSelectLevelMode: onSelectLevelMode, controls: controls, setIsParentNavEnabled: setIsMenuNavEnabled })
+        ))
+      ),
+      React.createElement("div", { className: "flex flex-col sm:flex-row gap-4" },
+        React.createElement(Button_InlinedComponent, { ref: skinsButtonRef, onClick: handleSkinsClick, variant: "secondary", size: "lg" }, "Skins"),
+        React.createElement(Button_InlinedComponent, { ref: settingsButtonRef, onClick: handleSettingsClick, variant: "ghost", size: "lg" }, "Settings")
+      ),
+      React.createElement("footer", { className: "mt-12 text-center" },
+        React.createElement("p", { className: 'text-xs ' + THEME_COLORS.textSecondary + ' opacity-60 font-body' }, "Vibe Coded by Leon Paul & Johann Schröger Studios")
+      )
+    )
+  );
+};
+MenuScreen_InlinedComponent.displayName = 'MenuScreen';
+// --- END OF INLINED components/MenuScreen.tsx ---
+
+// --- START OF INLINED components/SettingsScreen.tsx ---
+console.log('[SettingsScreen.tsx inline] Loading...');
+const SettingsScreen_InlinedComponent = ({ onSetScreen, initialControls, onSaveControls }) => {
+  const [controls, setControls] = React.useState(initialControls);
+  const [listeningKey, setListeningKey] = React.useState(null);
+  const [errorMsg, setErrorMsg] = React.useState('');
+  React.useEffect(() => { setControls(initialControls); }, [initialControls]);
+  const handleKeyCapture = React.useCallback((event) => {
+    if (listeningKey) {
+      event.preventDefault(); const newKey = event.code; playSound(SoundEffect.BUTTON_CLICK_SECONDARY, 0.3);
+      for (const act in controls) {
+        const action = act;
+        controls[action].forEach((k, idx) => {
+          if (k === newKey && (action !== listeningKey.action || idx !== listeningKey.index)) {
+            setErrorMsg('Input \'' + newKey + '\' already bound to ' + action + ' ' + (idx + 1) + '.'); playSound(SoundEffect.WALL_BUMP, 0.5);
+            setTimeout(() => setErrorMsg(''), 3000); setListeningKey(null); return;
+          }
+        });
+      }
+      setControls(prev => {
+        const newActionControls = [...prev[listeningKey.action]]; newActionControls[listeningKey.index] = newKey;
+        if (newActionControls[0] && newActionControls[0] === newActionControls[1]) newActionControls[listeningKey.index === 0 ? 1: 0] = ''; 
+        return { ...prev, [listeningKey.action]: newActionControls };
+      });
+      setListeningKey(null); setErrorMsg('');
+    }
+  }, [listeningKey, controls]);
+  React.useEffect(() => {
+    if (listeningKey) { window.addEventListener('keydown', handleKeyCapture); setErrorMsg(''); } 
+    else { window.removeEventListener('keydown', handleKeyCapture); }
+    return () => window.removeEventListener('keydown', handleKeyCapture);
+  }, [listeningKey, handleKeyCapture]);
+  const handleSetListen = (action, index) => {
+    playSound(SoundEffect.BUTTON_CLICK_SECONDARY, 0.4);
+    setControls(prev => { const newActionControls = [...prev[action]]; newActionControls[index] = ''; return { ...prev, [action]: newActionControls }; });
+    setListeningKey({ action, index });
+  };
+  const handleSave = () => {
+    const cleanedControls = Object.keys(controls).reduce((acc, action) => { acc[action] = controls[action].filter(key => key !== ''); return acc; }, {});
+    onSaveControls(cleanedControls); onSetScreen(Screen.MENU);
+  };
+  const handleReturnToMenu = () => { playSound(SoundEffect.BUTTON_CLICK_SECONDARY); onSetScreen(Screen.MENU); };
+  const handleRestoreDefaults = () => { playSound(SoundEffect.BUTTON_CLICK_SECONDARY); setControls(INITIAL_CONTROLS); setErrorMsg(''); };
+  const controlActions = ['up', 'down', 'left', 'right'];
+  return React.createElement("div", {className: 'min-h-screen ' + THEME_COLORS.background + ' flex flex-col items-center justify-center p-4 font-body'}, 
+    React.createElement("div", {className: THEME_COLORS.panelBg + ' ' + THEME_COLORS.panelBorderAccent + ' border-2 p-6 sm:p-8 rounded-lg shadow-2xl w-full max-w-lg relative'},
+      React.createElement("div", {className:"absolute top-3 left-3 sm:top-4 sm:left-4"}, React.createElement(Button_InlinedComponent, {onClick:handleReturnToMenu, variant:"ghost", size:"sm", "aria-label":"Return to Menu", className:"!px-2 !py-1 flex items-center"}, React.createElement("svg", {xmlns:"http://www.w3.org/2000/svg", viewBox:"0 0 20 20", fill:"currentColor", className:"w-5 h-5 mr-1"}, React.createElement("path", {"fillRule":"evenodd", "d":"M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z", "clipRule":"evenodd"})), "Menu")),
+      React.createElement("h2", {className:'font-display text-3xl font-bold ' + THEME_COLORS.textAccent + ' mb-6 text-center pt-8 sm:pt-0'}, "Settings"),
+      React.createElement("p", {className:THEME_COLORS.textSecondary + ' mb-3 text-center text-sm'}, "Select input field, then press desired key."),
+      errorMsg && React.createElement("p", {className:"text-red-400 mb-4 text-center h-6"}, errorMsg),
+      !errorMsg && React.createElement("div", {className:"h-6 mb-4"}),
+      React.createElement("div", {className:"space-y-4 mb-8"}, controlActions.map(action => React.createElement("div", {key:action, className:"grid grid-cols-3 items-center gap-2 sm:gap-4"}, React.createElement("label", {htmlFor: action + '1', className:THEME_COLORS.textPrimary + ' capitalize text-right font-medium text-lg'}, action + ':'), [0,1].map(index => React.createElement("input", {key:index, type:"text", id: action + (index+1), readOnly:true, value: listeningKey?.action === action && listeningKey?.index === index ? 'Awaiting Input...' : (controls[action]?.[index]?.replace('Key', '') || 'NONE'), onClick:()=>handleSetListen(action,index), onBlur:()=>{if(listeningKey?.action===action && listeningKey?.index===index)setListeningKey(null);}, className:'w-full p-3 rounded-md ' + THEME_COLORS.inputBg + ' ' + THEME_COLORS.inputText + ' ' + THEME_COLORS.inputBorder + ' border text-center uppercase tracking-wider cursor-pointer ' + THEME_COLORS.inputFocusRing + ' outline-none placeholder-indigo-400' }))))),
+      React.createElement("div", {className:"mt-8 flex flex-col sm:flex-row gap-4 sm:justify-center"}, React.createElement(Button_InlinedComponent, {onClick:handleSave, className:"w-full sm:w-auto", variant:"primary"}, "Save & Return"), React.createElement(Button_InlinedComponent, {onClick:handleRestoreDefaults, variant:"ghost", className:'w-full sm:w-auto text-sm ' + THEME_COLORS.textSecondary + ' ' + THEME_COLORS.buttonGhostHoverText}, "Restore Defaults"))
+    )
+  );
+};
+SettingsScreen_InlinedComponent.displayName = 'SettingsScreen';
+// --- END OF INLINED components/SettingsScreen.tsx ---
+
+// --- START OF INLINED App.tsx LOGIC (App_InlinedComponent) ---
+const App_InlinedComponent = () => {
+    console.log('[App.tsx inline] App component rendering/initializing...');
+    const [currentScreen, setCurrentScreen] = React.useState(Screen.MENU);
+    const [gameSettings, setGameSettings] = React.useState({ mode: GameMode.NORMAL, sizeOrLevelId: 15 });
+    const [lastGameResult, setLastGameResult] = React.useState(null);
+    const [controls, setControls] = React.useState(() => loadFromLocalStorage(LOCAL_STORAGE_KEYS.CONTROLS, INITIAL_CONTROLS));
+    const [highscores, setHighscores] = React.useState(() => loadFromLocalStorage(LOCAL_STORAGE_KEYS.HIGHSCORES, []));
+    const [levelProgress, setLevelProgress] = React.useState(() => loadFromLocalStorage(LOCAL_STORAGE_KEYS.LEVEL_PROGRESS, {}));
+    const [maxUnlockedLevel, setMaxUnlockedLevel] = React.useState(() => loadFromLocalStorage(LOCAL_STORAGE_KEYS.MAX_UNLOCKED_LEVEL, 1));
+    const [unlockedAuraPaletteIds, setUnlockedAuraPaletteIds] = React.useState(() => loadFromLocalStorage(LOCAL_STORAGE_KEYS.UNLOCKED_AURA_PALETTE_IDS, [DEFAULT_AURA_PALETTE_ID]));
+    const [unlockedCoreMatrixIds, setUnlockedCoreMatrixIds] = React.useState(() => loadFromLocalStorage(LOCAL_STORAGE_KEYS.UNLOCKED_CORE_MATRIX_IDS, [DEFAULT_CORE_MATRIX_ID]));
+    const [unlockedTrailSignatureIds, setUnlockedTrailSignatureIds] = React.useState(() => loadFromLocalStorage(LOCAL_STORAGE_KEYS.UNLOCKED_TRAIL_SIGNATURE_IDS, [DEFAULT_TRAIL_SIGNATURE_ID]));
+    const [selectedCustomAssembly, setSelectedCustomAssembly] = React.useState(() => loadFromLocalStorage(LOCAL_STORAGE_KEYS.SELECTED_CUSTOM_ASSEMBLY, DEFAULT_CUSTOM_ASSEMBLY));
+
+    React.useEffect(() => { console.log('[App.tsx inline] Running preloadSounds effect.'); try { preloadSounds(); console.log('[App.tsx inline] preloadSounds finished.'); } catch (e) { console.error('[App.tsx inline] Error during preloadSounds:', e); } }, []);
+    React.useEffect(() => { saveToLocalStorage(LOCAL_STORAGE_KEYS.CONTROLS, controls); }, [controls]);
+    React.useEffect(() => { saveToLocalStorage(LOCAL_STORAGE_KEYS.HIGHSCORES, highscores); }, [highscores]);
+    React.useEffect(() => { saveToLocalStorage(LOCAL_STORAGE_KEYS.LEVEL_PROGRESS, levelProgress); }, [levelProgress]);
+    React.useEffect(() => { saveToLocalStorage(LOCAL_STORAGE_KEYS.MAX_UNLOCKED_LEVEL, maxUnlockedLevel); }, [maxUnlockedLevel]);
+    React.useEffect(() => { saveToLocalStorage(LOCAL_STORAGE_KEYS.UNLOCKED_AURA_PALETTE_IDS, unlockedAuraPaletteIds); }, [unlockedAuraPaletteIds]);
+    React.useEffect(() => { saveToLocalStorage(LOCAL_STORAGE_KEYS.UNLOCKED_CORE_MATRIX_IDS, unlockedCoreMatrixIds); }, [unlockedCoreMatrixIds]);
+    React.useEffect(() => { saveToLocalStorage(LOCAL_STORAGE_KEYS.UNLOCKED_TRAIL_SIGNATURE_IDS, unlockedTrailSignatureIds); }, [unlockedTrailSignatureIds]);
+    React.useEffect(() => { saveToLocalStorage(LOCAL_STORAGE_KEYS.SELECTED_CUSTOM_ASSEMBLY, selectedCustomAssembly); }, [selectedCustomAssembly]);
+
+    const changeScreen = (screen) => { playSound(SoundEffect.SCREEN_TRANSITION, 0.4); setCurrentScreen(screen); };
+    const handleStartGame = (mode, sizeOrLevelId) => { playSound(SoundEffect.BUTTON_CLICK); setGameSettings({ mode, sizeOrLevelId }); changeScreen(Screen.GAME); };
+    const handleSelectLevelMode = () => { playSound(SoundEffect.BUTTON_CLICK); changeScreen(Screen.LEVEL_SELECT); };
+    const handleStartLevel = (levelId) => { if (levelId <= maxUnlockedLevel) { playSound(SoundEffect.BUTTON_CLICK); handleStartGame(GameMode.LEVELS, levelId); } else { playSound(SoundEffect.WALL_BUMP); changeScreen(Screen.LEVEL_SELECT); } };
+    const handleSaveControls = (newControls) => { playSound(SoundEffect.BUTTON_CLICK); setControls(newControls); };
+    const handleSaveSelectedAssembly = (newAssembly) => { setSelectedCustomAssembly(newAssembly); playSound(SoundEffect.SKIN_EQUIP); changeScreen(Screen.MENU); };
+    const handleSaveLevelProgress = React.useCallback((levelId, time, levelData) => {
+        let newlyUnlockedComponentThisWin;
+        let soundPlayedForUnlock = false;
+        setLevelProgress(prev => { const currentBest = prev[levelId]?.bestTime; const newBestTime = (!currentBest || time < currentBest) ? time : currentBest; return { ...prev, [levelId]: { completed: true, bestTime: newBestTime } }; });
+        if (levelId === maxUnlockedLevel && levelId < LEVELS_DATA.length) { setMaxUnlockedLevel(levelId + 1); }
+        if (levelData?.unlocksAuraPaletteId && !unlockedAuraPaletteIds.includes(levelData.unlocksAuraPaletteId)) { setUnlockedAuraPaletteIds(prev => [...new Set([...prev, levelData.unlocksAuraPaletteId])]); const paletteMeta = AURA_PALETTES.find(p => p.id === levelData.unlocksAuraPaletteId); if (paletteMeta && !newlyUnlockedComponentThisWin) { newlyUnlockedComponentThisWin = { type: 'aura_palette', id: paletteMeta.id, name: paletteMeta.name }; if (!soundPlayedForUnlock) { playSound(SoundEffect.SKIN_EQUIP); soundPlayedForUnlock = true; } } }
+        if (levelData?.unlocksCoreMatrixId && !unlockedCoreMatrixIds.includes(levelData.unlocksCoreMatrixId)) { setUnlockedCoreMatrixIds(prev => [...new Set([...prev, levelData.unlocksCoreMatrixId])]); const matrixMeta = CORE_MATRIX_ITEMS.find(m => m.id === levelData.unlocksCoreMatrixId); if (matrixMeta && !newlyUnlockedComponentThisWin) { newlyUnlockedComponentThisWin = { type: 'core_matrix', id: matrixMeta.id, name: matrixMeta.name }; if (!soundPlayedForUnlock) { playSound(SoundEffect.SKIN_EQUIP); soundPlayedForUnlock = true; } } }
+        if (levelData?.unlocksTrailSignatureId && !unlockedTrailSignatureIds.includes(levelData.unlocksTrailSignatureId)) { setUnlockedTrailSignatureIds(prev => [...new Set([...prev, levelData.unlocksTrailSignatureId])]); const trailMeta = TRAIL_SIGNATURE_ITEMS.find(t => t.id === levelData.unlocksTrailSignatureId); if (trailMeta && !newlyUnlockedComponentThisWin) { newlyUnlockedComponentThisWin = { type: 'trail_signature', id: trailMeta.id, name: trailMeta.name }; if (!soundPlayedForUnlock) { playSound(SoundEffect.SKIN_EQUIP); } } }
+        return newlyUnlockedComponentThisWin;
+    }, [maxUnlockedLevel, unlockedAuraPaletteIds, unlockedCoreMatrixIds, unlockedTrailSignatureIds]);
+    const handleGameWin = React.useCallback((time, mode, sizeOrLevelId, currentLevelData) => {
+        let isNewHighscore = false; let overallBestTime; let unlockedItemForThisWin;
+        if (mode === GameMode.LEVELS && currentLevelData) {
+            unlockedItemForThisWin = handleSaveLevelProgress(currentLevelData.id, time, currentLevelData);
+            const progressToCheck = loadFromLocalStorage(LOCAL_STORAGE_KEYS.LEVEL_PROGRESS, {});
+            overallBestTime = progressToCheck[currentLevelData.id]?.bestTime;
+            isNewHighscore = (overallBestTime === time);
+        } else {
+            const existingHighscore = highscores.filter(hs => hs.mode === mode && hs.size === sizeOrLevelId).sort((a, b) => a.time - b.time)[0];
+            overallBestTime = existingHighscore?.time;
+            if (!existingHighscore || time < existingHighscore.time) { isNewHighscore = true; const newHighscoreEntry = { mode, size: sizeOrLevelId, time, date: Date.now() }; setHighscores(prev => [...prev.filter(hs => !(hs.mode === mode && hs.size === sizeOrLevelId)), newHighscoreEntry].sort((a, b) => a.time - b.time).slice(0, 10)); overallBestTime = time; }
+            unlockedItemForThisWin = undefined;
+        }
+        setLastGameResult({ time, isNewHighscore, bestTime: overallBestTime, newlyUnlockedItem: unlockedItemForThisWin });
+        changeScreen(Screen.WIN);
+    }, [highscores, handleSaveLevelProgress]);
+    const handleReplay = () => { playSound(SoundEffect.BUTTON_CLICK); changeScreen(Screen.GAME); };
+    const handleUnlockAllLevels = React.useCallback(() => { setMaxUnlockedLevel(LEVELS_DATA.length); setUnlockedAuraPaletteIds(AURA_PALETTES.map(p => p.id)); setUnlockedCoreMatrixIds(CORE_MATRIX_ITEMS.map(m => m.id)); setUnlockedTrailSignatureIds(TRAIL_SIGNATURE_ITEMS.map(t => t.id)); }, []);
+    const getActivePlayerSkin = () => {
+        const palette = AURA_PALETTES.find(p => p.id === selectedCustomAssembly.paletteId) || AURA_PALETTES.find(p => p.id === DEFAULT_AURA_PALETTE_ID);
+        const coreShape = selectedCustomAssembly.coreShapeId; const trailStyle = selectedCustomAssembly.trailStyleId;
+        return { id: CUSTOM_SKIN_ID, name: 'Assembled Kryst Signature', description: 'A Kryst-Core energy pattern assembled by the Code-Breaker.', playerColor: palette.playerColor, trailColorBase: palette.trailColorBase, previewBg: 'radial-gradient(ellipse at center, ' + palette.playerColor + '33 0%, ' + THEME_COLORS.inputBg.replace('bg-', '') + ' 70%)', coreShape: coreShape, trailStyle: trailStyle, };
+    };
+    
+    const finalRenderScreen = () => {
+        console.log('[App.tsx inline] Rendering screen: ' + currentScreen);
+        const activeSkin = getActivePlayerSkin();
+        switch (currentScreen) {
+          case Screen.MENU:
+            return React.createElement(MenuScreen_InlinedComponent, { onSetScreen: changeScreen, onStartGame: handleStartGame, onSelectLevelMode: handleSelectLevelMode, controls: controls });
+          case Screen.GAME:
+            return React.createElement(GameScreen_InlinedComponent, { mode: gameSettings.mode, sizeOrLevelId: gameSettings.sizeOrLevelId, controls: controls, highscores: highscores, levelProgress: levelProgress, selectedPlayerSkinId: activeSkin.id, activePlayerSkin: activeSkin, onSetScreen: changeScreen, onGameWin: handleGameWin, onSaveLevelProgress: handleSaveLevelProgress });
+          case Screen.SETTINGS:
+            return React.createElement(SettingsScreen_InlinedComponent, { onSetScreen: changeScreen, initialControls: controls, onSaveControls: handleSaveControls });
+          case Screen.SKIN_CUSTOMIZATION:
+            return React.createElement(SkinCustomizationScreen_InlinedComponent, { onSetScreen: changeScreen, unlockedAuraPaletteIds: unlockedAuraPaletteIds, unlockedCoreMatrixIds: unlockedCoreMatrixIds, unlockedTrailSignatureIds: unlockedTrailSignatureIds, currentAssembly: selectedCustomAssembly, onSaveSelectedAssembly: handleSaveSelectedAssembly, controls: controls });
+          case Screen.WIN:
+            if (!lastGameResult) { changeScreen(Screen.MENU); return null; }
+            return React.createElement(WinScreen_InlinedComponent, { time: lastGameResult.time, mode: gameSettings.mode, sizeOrLevelId: gameSettings.sizeOrLevelId, isNewHighscore: lastGameResult.isNewHighscore, bestTime: lastGameResult.bestTime, newlyUnlockedItem: lastGameResult.newlyUnlockedItem, maxUnlockedLevel: maxUnlockedLevel, onSetScreen: changeScreen, onReplay: handleReplay, onStartLevel: handleStartLevel, controls: controls });
+          case Screen.LEVEL_SELECT:
+            return React.createElement(LevelSelectScreen_InlinedComponent, { onSetScreen: changeScreen, onStartLevel: handleStartLevel, levelProgress: levelProgress, maxUnlockedLevel: maxUnlockedLevel, controls: controls, onUnlockAllLevels: handleUnlockAllLevels });
+          case Screen.LEVEL_EDITOR:
+            return React.createElement(LevelEditorScreen_InlinedComponent, { onSetScreen: changeScreen, controls: controls });
+          default:
+            return React.createElement(MenuScreen_InlinedComponent, { onSetScreen: changeScreen, onStartGame: handleStartGame, onSelectLevelMode: handleSelectLevelMode, controls: controls });
+        }
+      };
+      return React.createElement("div", { className: 'w-screen h-screen overflow-hidden ' + THEME_COLORS.background + ' font-body' }, finalRenderScreen());
+};
+// --- END OF INLINED App.tsx LOGIC ---
+
+// --- START OF INLINED index.tsx (original content for rendering) ---
+console.log('[index.tsx inline] Script start (original logic)');
+console.log('[index.tsx inline] About to find root element.');
+const rootElement = document.getElementById('root');
+if (!rootElement) {
+  console.error('[index.tsx inline] Root element #root NOT FOUND.');
+  const errorDisplay = document.getElementById('error-container');
+  if (errorDisplay) {
+      const p = document.createElement('p');
+      p.textContent = 'CRITICAL STARTUP ERROR: Root element #root NOT FOUND in HTML. Cannot mount React app.';
+      errorDisplay.appendChild(p);
+      errorDisplay.style.display = 'block';
+  }
+  throw new Error("Could not find root element to mount to");
+}
+console.log('[index.tsx inline] Root element #root found.');
+
+try {
+  const root = ReactDOM.createRoot(rootElement);
+  console.log('[index.tsx inline] React root created.');
+
+  root.render(
+    React.createElement(React.StrictMode, null, React.createElement(App_InlinedComponent))
+  );
+  console.log('[index.tsx inline] App rendered to root.');
+} catch (e) {
+  console.error('[index.tsx inline] Error during React rendering:', e);
+  const errorDisplay = document.getElementById('error-container');
+  if (errorDisplay) {
+      const p = document.createElement('p');
+      p.textContent = 'CRITICAL REACT RENDER ERROR: ' + (e instanceof Error ? e.message : String(e)) + (e instanceof Error && e.stack ? "\\nStack: " + e.stack : "");
+      errorDisplay.appendChild(p);
+      errorDisplay.style.display = 'block';
+  }
+}
+// --- END OF INLINED index.tsx ---
+// --- END OF INLINED SCRIPT BUNDLE ---
+    </script>
+    <script>
+      console.log('[HTML] Main app script (fully inlined content) tag processed by Babel setup.');
+    </script>
+<script type="module" src="/index.tsx"></script>
+</body>
+</html>
